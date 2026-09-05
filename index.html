@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="dooolll00의 프론트엔드 개발 포트폴리오. 웹의 기본부터 차근차근 만들어가는 프로젝트를 소개합니다.">
+  <meta name="color-scheme" content="light dark">
+  <title>dooolll00 — Frontend Developer</title>
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="site-header">
+    <nav class="nav container" aria-label="주 메뉴">
+      <a class="logo" href="#hero" aria-label="dooolll00 홈">d<span>.</span></a>
+      <div id="nav-menu" class="nav-menu">
+        <a href="#hero">Home</a><a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#contact">Contact <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="nav-actions">
+        <button id="theme-toggle" class="icon-button" type="button" aria-label="다크 모드 켜기" aria-pressed="false">☾</button>
+        <button id="menu-toggle" class="icon-button hamburger" type="button" aria-controls="nav-menu" aria-expanded="false" aria-label="메뉴 열기"><span></span><span></span></button>
+      </div>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <section id="hero" class="hero container" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> LEARNING. BUILDING. GROWING.</p>
+        <h1 id="hero-title">작은 호기심을,<br><span>작동하는 웹으로.</span></h1>
+        <p class="hero-intro">안녕하세요, <strong>dooolll00</strong>입니다.<br>웹의 기본을 이해하고, 직접 만들며 성장하는<br class="desktop-break"> 프론트엔드 개발자입니다.</p>
+        <div class="button-row"><a class="button primary" href="#projects">프로젝트 둘러보기 <span aria-hidden="true">↗</span></a><a class="button secondary" href="#contact">이야기 나누기 <span aria-hidden="true">→</span></a></div>
+        <p class="hero-note">MADE WITH HTML, CSS & A LITTLE CURIOSITY</p>
+      </div>
+      <div class="hero-art" aria-label="HTML, CSS, JavaScript가 하나의 웹으로 연결되는 그래픽" role="img">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <span class="art-caption">IDEA → CODE → EXPERIENCE</span>
+        <div class="code-window"><div class="window-bar"><i></i><i></i><i></i><span>hello-world.js</span></div><div class="code-lines"><span class="code-muted">// 매일, 조금 더 나은 코드</span><br><span class="code-purple">const</span> developer = {<br>&nbsp; name: <span class="code-green">'dooolll00'</span>,<br>&nbsp; focus: <span class="code-green">'frontend'</span>,<br>&nbsp; curiosity: <span class="code-orange">Infinity</span><br>};<br><br>developer.<span class="code-purple">build</span>();<b class="cursor">▌</b></div></div>
+        <span class="floating-tag tag-html">&lt;/&gt; HTML</span><span class="floating-tag tag-css">{ } CSS</span><span class="floating-tag tag-js">JS <span>JavaScript</span></span>
+        <span class="art-footer"><span class="status-dot"></span> Always a work in progress</span>
+      </div>
+      <a href="#about" class="scroll-hint">SCROLL TO EXPLORE <span aria-hidden="true">↓</span></a>
+    </section>
+    <section id="about" class="section about-section" aria-labelledby="about-title">
+      <div class="container about-grid reveal">
+        <div class="profile-frame"><img src="images/profile.png" alt="dooolll00의 GitHub 프로필 아바타" width="320" height="320" loading="lazy"><span class="profile-label">HELLO, I'M DOOOLLL00 <span aria-hidden="true">✳</span></span></div>
+        <div><p class="eyebrow">01 / ABOUT ME</p><h2 id="about-title">어떻게 동작하는지,<br>이해하며 만듭니다.</h2><p class="body-copy">화면 너머의 원리가 궁금합니다. 버튼을 누르면 무엇이 바뀌는지, 데이터가 어떻게 화면이 되는지. 작은 질문에서 시작해 직접 코드로 답을 찾아갑니다.</p><p class="body-copy">지금은 HTML, CSS, JavaScript로 탄탄한 기본기를 쌓고 있습니다. 보기 좋은 화면과 사용하기 편한 경험을 함께 고민합니다.</p><div class="about-values"><span>기본에 충실하게</span><span>사용자를 생각하며</span><span>꾸준히 한 걸음씩</span></div></div>
+      </div>
+    </section>
+    <section id="skills" class="section container" aria-labelledby="skills-title">
+      <div class="section-heading reveal"><div><p class="eyebrow">02 / MY TOOLKIT</p><h2 id="skills-title">생각을 구현하는 도구들</h2></div><p>화면의 구조부터 사용자와의 상호작용까지.</p></div>
+      <div class="skills-grid">
+        <article class="skill-card reveal"><span class="skill-icon html-icon">&lt;/&gt;</span><span class="small-label">STRUCTURE</span><h3>HTML5</h3><p>의미 있는 구조와 접근성.<br>누구나 읽을 수 있는 웹의 시작.</p><span class="skill-detail">Semantic markup · Accessibility</span></article>
+        <article class="skill-card reveal"><span class="skill-icon css-icon">#</span><span class="small-label">PRESENTATION</span><h3>CSS3</h3><p>화면에 맞춰 유연하게.<br>디테일을 더하는 레이아웃과 모션.</p><span class="skill-detail">Flexbox · Grid · Responsive</span></article>
+        <article class="skill-card reveal"><span class="skill-icon js-icon">JS</span><span class="small-label">INTERACTION</span><h3>JavaScript</h3><p>이벤트가 상태를 바꾸고,<br>상태가 새로운 화면을 만듭니다.</p><span class="skill-detail">ES6+ · DOM · Fetch API</span></article>
+        <article class="skill-card reveal"><span class="skill-icon git-icon">⑂</span><span class="small-label">WORKFLOW</span><h3>Git & GitHub</h3><p>작은 변화를 차곡차곡.<br>기록하고 공유하며 함께 성장하기.</p><span class="skill-detail">Version control · GitHub Pages</span></article>
+      </div>
+    </section>
+    <section id="projects" class="section projects-section" aria-labelledby="projects-title">
+      <div class="container"><div class="section-heading reveal"><div><p class="eyebrow">03 / SELECTED WORK</p><h2 id="projects-title">배움을 담은 프로젝트</h2></div><a class="text-link" href="https://github.com/dooolll00" target="_blank" rel="noopener noreferrer">GitHub에서 모두 보기 ↗</a></div>
+        <div class="projects-toolbar"><div id="project-filters" class="filters" role="group" aria-label="프로젝트 언어 필터"></div><span class="api-label"><span class="status-dot"></span> LIVE FROM GITHUB</span></div>
+        <p id="project-summary" class="sr-only" role="status" aria-live="polite"></p>
+        <div id="project-list" class="projects-grid" aria-busy="true"><p class="state-panel">프로젝트를 불러오는 중...</p></div>
+        <noscript><p>프로젝트 목록을 보려면 JavaScript를 활성화하거나 위 GitHub 링크를 방문해 주세요.</p></noscript>
+      </div>
+    </section>
+    <section id="contact" class="section container contact-grid" aria-labelledby="contact-title">
+      <div class="reveal"><p class="eyebrow">04 / SAY HELLO</p><h2 id="contact-title">좋은 이야기는<br><span class="accent-text">인사에서 시작하니까.</span></h2><p class="body-copy">프로젝트 이야기, 함께 배우고 싶은 주제,<br>가벼운 인사도 환영합니다.</p><a class="text-link" href="https://github.com/dooolll00" target="_blank" rel="noopener noreferrer">@dooolll00 on GitHub ↗</a><p class="form-note">학습용 문의 폼입니다. 입력값 검증을 체험할 수 있으며, 메시지가 실제로 전송되지는 않습니다.</p></div>
+      <form id="contact-form" novalidate>
+        <div class="form-row"><div class="field"><label for="name">이름 <span aria-hidden="true">*</span></label><input id="name" name="name" autocomplete="name" placeholder="어떻게 불러드릴까요?" required maxlength="80" aria-describedby="name-error"><p id="name-error" class="field-error" aria-live="polite"></p></div><div class="field"><label for="email">이메일 <span aria-hidden="true">*</span></label><input id="email" name="email" type="email" autocomplete="email" placeholder="hello@example.com" required maxlength="254" aria-describedby="email-error"><p id="email-error" class="field-error" aria-live="polite"></p></div></div>
+        <div class="field"><label for="message">메시지 <span aria-hidden="true">*</span></label><textarea id="message" name="message" rows="5" placeholder="어떤 이야기를 나누고 싶으신가요?" required maxlength="2000" aria-describedby="message-error message-count"></textarea><div class="message-meta"><p id="message-error" class="field-error" aria-live="polite"></p><span id="message-count">0 / 2000</span></div></div>
+        <button class="button primary submit-button" type="submit">메시지 작성 완료 <span aria-hidden="true">↗</span></button><p id="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <footer class="footer"><div class="container footer-inner"><a class="logo" href="#hero" aria-label="홈으로">d<span>.</span></a><p>© <span id="year">2026</span> dooolll00. Built with curiosity.</p><a href="https://github.com/dooolll00" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></footer>
+  <button id="scroll-top" class="icon-button scroll-top" type="button" aria-label="페이지 맨 위로" hidden>↑</button>
+</body>
+</html>
