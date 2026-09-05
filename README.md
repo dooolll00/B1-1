@@ -100,6 +100,8 @@ Flexbox는 한 축에서 항목을 배치하기 좋습니다. 네비게이션에
 
 위 자동 검증은 모두 통과했습니다. 추가로 동작 줄이기를 끈 Chrome에서 실제 Intersection Observer 등장 처리와 인라인 스타일·인라인 이벤트 부재, 이미지 alt를 확인했습니다.
 
+배포된 사이트에서도 Chrome으로 실제 GitHub 프로젝트 조회, 다크 모드 새로고침 유지, 문의 폼 검증, 320/375/768/1024/1440px 반응형, 모바일 메뉴, 맨 위 버튼, 이미지 로딩을 확인했습니다. JavaScript 실행 오류는 없었습니다.
+
 ## 스크린샷
 
 실제 GitHub API 응답을 이용한 로컬 Chrome 캡처입니다.
@@ -113,9 +115,9 @@ Flexbox는 한 축에서 항목을 배치하기 좋습니다. 네비게이션에
 - 업로드 대상 저장소: [dooolll00/B1-1](https://github.com/dooolll00/B1-1)
 - 제출 파일: 검토를 마친 HTML/CSS/JavaScript, 이미지, README와 개발 설정 13개.
 - 업로드 브랜치: `main`. 불필요한 개발용 테스트 파일을 제외한 제출본입니다.
-- GitHub Pages: 아직 배포되지 않았으며, 접속 가능한 배포 URL은 없습니다.
+- GitHub Pages: [포트폴리오 바로 보기](https://dooolll00.github.io/B1-1/) — 배포 및 공개 접속 확인 완료.
 
-배포할 때 Settings → Pages → Deploy from a branch → `main`의 `/ (root)`를 선택합니다. 저장소 하위 경로에서도 작동하도록 로컬 리소스를 상대 경로로 연결했습니다.
+배포 설정은 Settings → Pages에서 관리합니다. `main` 브랜치의 정적 파일을 GitHub Pages로 제공합니다. 저장소 하위 경로에서도 작동하도록 로컬 리소스를 상대 경로로 연결했습니다.
 
 ## 미션 요구사항 검토
 
@@ -132,7 +134,7 @@ Flexbox는 한 축에서 항목을 배치하기 좋습니다. 네비게이션에
 | 실제 GitHub API, 로딩/성공/에러/빈 상태, 403 및 재시도 | 완료 |
 | 3개 이상 상태 → 렌더링 흐름 | 완료 (테마/메뉴/API/필터/폼) |
 | README 설명·사용 기술·스크린샷 3종 | 완료 |
-| GitHub 제출 파일 및 GitHub Pages 공개 URL | GitHub 제출본; Pages 배포 미완료 |
+| GitHub 제출 파일 및 GitHub Pages 공개 URL | 완료 — 공개 URL 접속 및 주요 기능 검증 |
 | 선택 과제 | 언어 필터와 시스템 테마 감지 구현; 타이핑·실제 이메일 전송 미구현 |
 
 제출물에는 사이트 소스, 필요한 이미지, 필수 스크린샷, README, Live Server 설정, 정적 배포 설정만 남겼습니다.
