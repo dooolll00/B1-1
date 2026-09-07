@@ -5,7 +5,6 @@
 - 배포 사이트: https://dooolll00.github.io/B1-1/
 - 저장소: https://github.com/dooolll00/B1-1
 - 구현 설명과 최신 검증 결과: [README](README.md)
-- 공식 검토 기준: [사용자가 제공한 미션 원문](MISSION_REQUIREMENTS.md)
 - 발표 준비: [발표 가이드](PRESENTATION_GUIDE.md)
 - 기준 파일: [HTML](index.html), [CSS](css/style.css), [JavaScript](js/main.js)
 
@@ -247,7 +246,7 @@ git status
 
 ```bash
 git diff
-git add index.html css/style.css js/main.js images README.md MISSION_GUIDE.md MISSION_REQUIREMENTS.md PRESENTATION_GUIDE.md tests/review.py WORK_LOG.md
+git add index.html css/style.css js/main.js images README.md MISSION_GUIDE.md PRESENTATION_GUIDE.md tests/review.py WORK_LOG.md
 git commit -m "Improve portfolio learning guide"
 git push origin main
 ```

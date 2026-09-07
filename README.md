@@ -4,13 +4,11 @@ HTML, CSS, JavaScript만으로 만든 반응형 포트폴리오입니다. **사�
 
 - [GitHub 저장소](https://github.com/dooolll00/B1-1)
 - [GitHub Pages 사이트](https://dooolll00.github.io/B1-1/)
-- [미션 원문](MISSION_REQUIREMENTS.md): 사용자가 제공한 평가 기준
-- [발표 가이드](PRESENTATION_GUIDE.md): 5~7분 설명, 코드 찾기, 시연, 예상 질문
 - [단계별 구현 가이드](MISSION_GUIDE.md): 기능별 학습과 실습
 
 ## 검토 결론과 범위
 
-2026-09-07에 미션 원문과 소스를 대조했습니다. 필수 기능을 구현했고, 아래 체크리스트에 근거를 연결했습니다. 최종 판단은 코드 확인, Chrome 동작 검증, 배포 확인을 구분합니다. 본인이 설명할 수 있는지는 발표 연습으로 별도 확인해야 합니다.
+2026-09-07에 구현 상태를 검토했습니다. 필수 기능을 구현했고, 아래 체크리스트에 근거를 연결했습니다. 최종 판단은 코드 확인, Chrome 동작 검증, 배포 확인을 구분합니다.
 
 이번 보완에서는 모든 구역에 접근할 수 있도록 Footer 메뉴와 앵커를 추가했습니다. API 배열 내부의 잘못된 항목을 검사하고, 손상된 캐시는 무시한 뒤 다시 조회하도록 수정했습니다. 이전에는 `[null]` 같은 캐시가 남아 있으면 네트워크가 정상이어도 네트워크 오류로 표시됐습니다.
 
@@ -53,9 +51,7 @@ B1-1/
 ├── .vscode/                   # Live Server 추천 및 5500 포트 설정
 ├── .nojekyll                  # 정적 Pages 배포용
 ├── tests/review.py            # 개발용 Chrome 검증; 사이트에서 로드하지 않음
-├── MISSION_REQUIREMENTS.md    # 제공받은 미션 원문
 ├── MISSION_GUIDE.md           # 단계별 학습
-├── PRESENTATION_GUIDE.md      # 발표 대본·시연·예상 질문
 ├── WORK_LOG.md                # 이어서 작업하기 위한 기록
 └── README.md
 ```
@@ -118,7 +114,6 @@ B1-1/
 - [x] README에 프로젝트 설명·사용 기술·저장소 URL·Pages URL·스크린샷 3종 포함.
 - [x] 기존 GitHub Pages URL 존재 및 HTTP 200 응답 확인.
 - [x] 변경 사항을 GitHub main에 커밋·업로드하고 Pages 배포 완료 후 최종본 재검증(2026-09-07).
-- [ ] 발표자가 학습 목표 6개를 코드와 연결해 직접 설명하기 — [발표 가이드](PRESENTATION_GUIDE.md).
 
 ### 보너스 과제(선택)
 
