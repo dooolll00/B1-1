@@ -1,182 +1,218 @@
-# dooolll00 — 순수 웹 포트폴리오
+# B1-1 — 순수 웹 포트폴리오
 
-HTML, CSS, JavaScript만으로 구현한 반응형 포트폴리오입니다. **이벤트 → 상태 변경 → DOM 렌더링** 흐름을 테마, 메뉴, GitHub 프로젝트, 문의 폼에서 직접 확인할 수 있습니다.
+HTML, CSS, JavaScript만으로 만든 반응형 포트폴리오입니다. **사용자 이벤트 → 상태 변경 → DOM 업데이트 → 화면 변화**를 직접 구현하는 미션이며, React 등 외부 라이브러리는 사용하지 않습니다.
 
-## 실행
+- [GitHub 저장소](https://github.com/dooolll00/B1-1)
+- [GitHub Pages 사이트](https://dooolll00.github.io/B1-1/)
+- [미션 원문](MISSION_REQUIREMENTS.md): 사용자가 제공한 평가 기준
+- [발표 가이드](PRESENTATION_GUIDE.md): 5~7분 설명, 코드 찾기, 시연, 예상 질문
+- [단계별 구현 가이드](MISSION_GUIDE.md): 기능별 학습과 실습
 
-1. VS Code에서 이 `portfolio` 폴더를 엽니다.
-2. 확장 탭에서 추천 확장 **Live Server (ritwickdey.LiveServer)** 를 설치합니다.
-3. `index.html`에서 우클릭 → **Open with Live Server**.
-4. `http://127.0.0.1:5500`에 접속합니다.
+## 검토 결론과 범위
 
-현재 개발 환경에는 Live Server 설치를 완료했습니다. 설정 파일 `.vscode/extensions.json`, `.vscode/settings.json`을 포함했습니다. npm 설치나 빌드 과정은 필요하지 않습니다. 대안으로 `python3 -m http.server 5500 --bind 127.0.0.1`을 실행해 같은 주소에서 볼 수 있습니다. 파일을 직접 더블클릭하기보다 HTTP 개발 서버 사용을 권장합니다. 같은 포트를 사용하는 서버는 하나만 실행하세요.
+2026-09-07에 미션 원문과 소스를 대조했습니다. 필수 기능을 구현했고, 아래 체크리스트에 근거를 연결했습니다. 최종 판단은 코드 확인, Chrome 동작 검증, 배포 확인을 구분합니다. 본인이 설명할 수 있는지는 발표 연습으로 별도 확인해야 합니다.
+
+이번 보완에서는 모든 구역에 접근할 수 있도록 Footer 메뉴와 앵커를 추가했습니다. API 배열 내부의 잘못된 항목을 검사하고, 손상된 캐시는 무시한 뒤 다시 조회하도록 수정했습니다. 이전에는 `[null]` 같은 캐시가 남아 있으면 네트워크가 정상이어도 네트워크 오류로 표시됐습니다.
+
+**배포 구분:** 위 URL은 기존 배포본입니다. 이번 로컬 수정은 아직 commit/push하지 않았으므로 새 Footer 링크, 데이터 검증 보완, 블루·퍼플 디자인은 배포 반영 전입니다. 배포 확인 결과와 로컬 테스트 결과는 아래 검증 항목을 참고하세요.
+
+## 디자인
+
+사용자가 제안한 미니멀 블루(라이트)·미드나잇 퍼플(다크) 색상과 Pretendard 폰트를 적용했습니다. 공통 모서리 변수는 `10px`, 그림자는 밝은 테마에서 `0 10px 30px rgba(0, 0, 0, 0.05)`, 어두운 테마에서 같은 크기에 불투명도 `0.2`입니다. `--radius`와 `--shadow`를 참조하는 요소에 적용되며, 별도 값으로 지정된 Hero 그래픽의 색상·모서리는 기존 값을 사용합니다.
+
+미션은 웹 폰트를 허용합니다. Pretendard는 UI 프레임워크가 아닌 웹 폰트이므로 이 조건에 부합하며, 스타일시트 맨 위의 `@import`로 불러옵니다. CDN에 연결할 수 없으면 뒤에 지정한 시스템 폰트로 표시합니다. 테마는 기존과 동일하게 CSS 변수와 `data-theme`로 전환합니다.
+
+디자인 변경 후 Chrome 검증 29개 항목을 다시 통과했습니다. 별도 확인으로 Pretendard 400/600/700/800/900 굵기의 실제 로딩, CDN 차단 시 시스템 폰트 표시, 양쪽 테마의 배경색과 10px 카드 모서리, 320/375/768/1024/1440px 가로 넘침 없음을 확인했습니다.
+
+## 실행과 사용 기술
+
+사용 기술은 HTML5(구조), CSS3(배치·테마·반응형), JavaScript ES6+(이벤트·상태·비동기), GitHub REST API(공개 저장소), GitHub Pages(정적 배포)입니다. npm 설치나 빌드는 필요하지 않습니다.
+
+1. VS Code에서 **B1-1** 폴더를 엽니다.
+2. **Live Server (`ritwickdey.LiveServer`)** 확장을 설치합니다. 이번 작업 환경에서는 설치를 확인했습니다. 다른 컴퓨터에서는 별도 설치해야 합니다.
+3. `index.html`을 우클릭해 **Open with Live Server**를 선택합니다.
+4. `http://127.0.0.1:5500`으로 접속합니다.
+
+대안은 아래 명령입니다. 같은 포트에는 서버 하나만 실행합니다.
+
+```bash
+python3 -m http.server 5500 --bind 127.0.0.1
+```
 
 ## 파일 구조
 
 ```text
-portfolio/
-├── index.html                 # 시맨틱 구조, 폼과 기본 콘텐츠
-├── css/style.css              # 모바일 퍼스트, CSS 변수, 테마, 애니메이션
-├── js/main.js                 # 상태, 이벤트, 렌더링, API
+B1-1/
+├── index.html                 # 의미 있는 구조, 폼, 기본 콘텐츠
+├── css/style.css              # CSS 변수, 모바일 퍼스트, 테마, 애니메이션
+├── js/main.js                 # 상태, 이벤트, 렌더링, API 요청
 ├── images/
-│   ├── profile.png            # GitHub 프로필 아바타
+│   ├── profile.png
 │   ├── favicon.svg
-│   └── screenshots/           # 실제 브라우저 캡처 3종
-├── .vscode/                   # Live Server 추천 및 설정
-├── MISSION_GUIDE.md           # 현재 코드로 따라 하는 미션 수행 가이드
-├── .nojekyll                  # GitHub Pages 정적 배포용
+│   └── screenshots/           # desktop / mobile / dark
+├── .vscode/                   # Live Server 추천 및 5500 포트 설정
+├── .nojekyll                  # 정적 Pages 배포용
+├── tests/review.py            # 개발용 Chrome 검증; 사이트에서 로드하지 않음
+├── MISSION_REQUIREMENTS.md    # 제공받은 미션 원문
+├── MISSION_GUIDE.md           # 단계별 학습
+├── PRESENTATION_GUIDE.md      # 발표 대본·시연·예상 질문
+├── WORK_LOG.md                # 이어서 작업하기 위한 기록
 └── README.md
 ```
 
-단계별 실습은 [미션 수행 가이드](MISSION_GUIDE.md)를 참고하세요. 현재 코드의 함수명, 검증 방법, Git 업로드·배포 절차를 연결해 정리했습니다.
+## 미션 요구사항 체크리스트
 
-## 학습 순서와 코드 찾기
+`[x]`는 아래 근거로 구현·설정을 확인했다는 뜻입니다. 배포 갱신과 본인의 설명 연습은 별도로 남겨 둡니다. 코드 위치는 줄 번호 대신 변경에 강한 함수명과 CSS 선택자로 표시했습니다.
 
-HTML의 섹션 주석부터 읽고, CSS의 01~12 번호를 따라 레이아웃을 확인합니다. JavaScript는 아래 순서로 읽습니다. 들여쓰기는 공백 2칸으로 통일하고, 한 줄에 몰려 있던 태그·스타일 선언·조건문을 펼쳤습니다.
+### 기본 구성·HTML
 
-| 순서 | `js/main.js`에서 찾을 주석 | 먼저 이해할 내용 |
+- [x] `index.html`, `css/`, `js/`, `images/` 역할 분리; 외부 CSS와 JS 연결.
+- [x] VS Code + Live Server 환경: `.vscode/extensions.json`, `.vscode/settings.json`; 확장 설치 확인.
+- [x] `header`, `nav`, `main`, `section`, `article`, `footer` 사용 — [index.html](index.html).
+- [x] Hero 인사말·CTA, About 소개·프로필, Skills 기술 목록, Projects API 카드, Contact 문의 폼, Footer 저작권·GitHub 링크.
+- [x] 네비게이션에서 Hero/About/Skills/Projects/Contact/Footer로 이동하는 앵커와 대응 ID 존재.
+- [x] 프로필 이미지의 의미 있는 `alt`; CSS 그래픽은 `role="img"`와 `aria-label`로 설명.
+- [x] 이름·이메일·메시지의 `label for`와 입력 요소 `id` 일치.
+
+### CSS·반응형
+
+- [x] 외부 `css/style.css`; `:root`에 색상·폰트·간격 변수 정의.
+- [x] `[data-theme="dark"]`에서 테마 변수 재정의.
+- [x] `.nav`에 Flexbox: 로고 왼쪽, 메뉴와 버튼 오른쪽.
+- [x] `.projects-grid`에 Grid: `repeat(auto-fit, minmax(min(100%, 290px), 1fr))`.
+- [x] 기본 모바일 스타일 → `min-width: 768px` 태블릿 → `min-width: 1024px` 데스크톱.
+- [x] 768px 미만 메뉴 숨김·햄버거 표시, 이상에서는 가로 메뉴 표시.
+- [x] 버튼·카드 `:hover`, `transition`; 카드 `box-shadow` 적용.
+
+### JavaScript·인터랙션
+
+- [x] `defer` 연결; `const`/`let` 사용; `var`, 인라인 `onclick`, 인라인 `style` 사용 없음.
+- [x] `querySelector`/`querySelectorAll`, `textContent`/`innerHTML`, `classList.add/remove/toggle` 사용 — [js/main.js](js/main.js).
+- [x] `click`, `submit`, `scroll`, `input` 이벤트와 `addEventListener`; 앵커·폼에서 `preventDefault()`.
+- [x] 햄버거 클릭으로 열기·닫기: `state.menuOpen` → `renderMenu()` → `classList.toggle("active", state.menuOpen)`.
+- [x] 앵커 클릭 시 `scrollIntoView()`로 부드럽게 이동; 메뉴 닫기와 대상 포커스 처리.
+- [x] 스크롤 **300px 이상**에서 맨 위 버튼 표시, 클릭 시 `scrollTo({ top: 0 })`.
+- [x] 스크롤 **60px 이상**에서 헤더 배경 변경 — `renderScroll()`.
+- [x] 테마 토글 → `portfolio-theme`에 저장 → 새로고침 시 복원 — `renderTheme()`, 저장소 도우미.
+- [x] Intersection Observer **threshold: 0.2**, 20% 이상 보이면 한 번 등장; `unobserve()`로 관찰 종료.
+- [x] `prefers-reduced-motion` 사용자에게 애니메이션과 부드러운 이동 생략(접근성 보완).
+
+### 폼 UX·ES6+·API
+
+- [x] 이름·이메일·메시지 필수값, `trim()`으로 공백만 입력한 경우 거부 — `validateField()`.
+- [x] 이메일 정규식과 `typeMismatch` 검사, 필드 근처 오류 표시, 첫 오류로 포커스 이동.
+- [x] 제출 기본 동작 방지, 검증 성공 안내 — `submit` 이벤트와 `renderForm()`.
+- [x] 화살표 함수, 템플릿 리터럴, 객체 구조분해 활용.
+- [x] `map()`으로 카드 문자열 생성 후 `join("")`, `forEach()`로 요소 순회, 선택 과제 `filter()` 활용.
+- [x] 본인 계정 `dooolll00`의 `/users/dooolll00/repos` 호출 — `fetch`, `async/await`, `try/catch`.
+- [x] 로딩 스피너, 성공 카드, 에러 안내·재시도, 빈 결과 안내 — `renderProjects()`.
+- [x] `response.ok` 검사; 403/429 한도 안내, 404, 서버 오류, 네트워크 오류 처리.
+- [x] 실제 한도를 소진하지 않고 모의 응답으로 403·빈 배열·실패·재시도 검증.
+- [x] 최소 3개의 상태 → 렌더링 흐름: 테마, 메뉴, API, 폼, 필터(아래 표).
+
+문의 폼은 **검증 데모**입니다. 입력 내용을 저장하거나 이메일을 보내지 않으며, 성공 문구에도 실제 미전송을 명시합니다. 실제 전송은 선택 과제입니다.
+
+### 제출·개발 제약
+
+- [x] 순수 HTML/CSS/JavaScript; React/Vue/jQuery/Bootstrap/Tailwind 등 런타임 라이브러리 없음.
+- [x] README에 프로젝트 설명·사용 기술·저장소 URL·Pages URL·스크린샷 3종 포함.
+- [x] 기존 GitHub Pages URL 존재 및 HTTP 200 응답 확인.
+- [ ] 이번 수정 사항을 GitHub에 commit/push하고 Pages 배포 완료 후 최종본 재검증.
+- [ ] 발표자가 학습 목표 6개를 코드와 연결해 직접 설명하기 — [발표 가이드](PRESENTATION_GUIDE.md).
+
+### 보너스 과제(선택)
+
+- [x] 언어별 프로젝트 필터 (`renderFilters()`, `array.filter()`).
+- [x] 시스템 다크 모드 감지 (`matchMedia`, `explicitTheme`); 직접 선택한 설정을 우선 적용.
+- [ ] Hero 타이핑 효과 — 선택 사항, 미구현.
+- [ ] Formspree/EmailJS 실제 이메일 전송 — 선택 사항, 미구현.
+
+## 핵심 개념과 코드 설명
+
+HTML은 콘텐츠의 역할을 표현합니다. 사이트 전체 제목과 이동은 `header`/`nav`, 주요 내용은 `main`, 주제 단위는 `section`, 독립적인 카드는 `article`, 저작권은 `footer`로 나눴습니다. 단순 배치를 묶을 때는 `div`를 사용했습니다.
+
+Flexbox는 한 축을 중심으로 정렬할 때 적합하므로 메뉴와 버튼 묶음에 사용했습니다. Grid는 행과 열을 함께 다루기 좋아 프로젝트 목록에 사용했습니다. `auto-fit`은 들어갈 열 수를 조절하고, `minmax`는 열 너비 범위를 정하며, `min(100%, 290px)`는 좁은 모바일에서 카드가 화면을 넘는 것을 막습니다.
+
+| 이벤트 | 바뀌는 상태 | DOM·화면에 반영하는 방법 |
 | --- | --- | --- |
-| 1 | `01. 공통 설정` | DOM 선택과 화면이 기억할 `state` |
-| 2 | `02. [필수] 다크 모드` | 클릭 → `state.theme` → `renderTheme()` |
-| 3 | `03. [필수] 모바일 메뉴` | 클릭 → `state.menuOpen` → `renderMenu()` |
-| 4 | `04. [필수] 앵커 이동` | scroll 이벤트, 60/300px 기준, Observer |
-| 5 | `05. [필수] 프로젝트` | loading → fetch → 성공/에러 → 카드 |
-| 6 | `06. [필수] 문의 폼` | 입력 → values/errors → 오류 또는 성공 안내 |
-| 7 | `07. 처음 로드` | 첫 화면 렌더링과 API 요청 시작 |
+| 테마 버튼 클릭 | `state.theme` | `renderTheme()` → HTML `data-theme` → CSS 변수 |
+| 햄버거 클릭 | `state.menuOpen` | `renderMenu()` → `active`, `aria-expanded` |
+| API 요청 시작·완료·실패 | `state.projects.status`, `repos`, `error` | `renderProjects()` → 스피너·카드·오류·빈 결과 |
+| 폼 입력·제출 | `state.form.values`, `errors`, `success` | `renderForm()` → 필드 오류·글자 수·성공 안내 |
+| 언어 버튼 클릭 | `state.projects.filter` | 버튼 클래스·`aria-pressed` 갱신 후 `renderProjects()`에서 필터링 |
 
-### 필수 기능과 추가 기능
+상태는 화면이 기억할 값이고 DOM은 실제 문서 요소입니다. `querySelector`로 요소를 선택하고 `addEventListener`로 동작을 연결합니다. **상태를 바꾸는 것만으로 DOM이 자동 변경되지는 않으므로 렌더링 함수를 직접 호출**합니다. 이 점을 이해하면 다음 미션의 React 상태와 렌더링을 연결하기 쉽습니다.
 
-| 구분 | 구현 내용 | 공부할 순서 |
-| --- | --- | --- |
-| 미션 필수 | 시맨틱 HTML, Flexbox/Grid, 반응형, 메뉴, 스크롤, 다크 모드 저장, 폼 검증, GitHub API 4가지 화면 상태 | 먼저 각 기능의 이벤트·상태·렌더링을 설명하기 |
-| 미션 선택 과제 | 언어별 프로젝트 필터, 시스템 다크 모드 감지 | 필수 흐름을 이해한 다음 읽기 |
-| 추가 보완 | 5분 캐시, 페이지네이션, 15초 시간 제한, 글자 수, 키보드 포커스, 동작 줄이기 대응 | 필요한 이유와 예외 처리를 이해하기 |
-| 안전한 화면 출력 | API 문자열 이스케이프, GitHub 링크 검증 | innerHTML 사용 부분과 함께 읽기 |
+화살표 함수는 콜백을 간결하게 쓰는 문법입니다. 구조분해는 객체에서 필요한 속성을 꺼내며, `map`은 배열의 각 값을 변환하고 `filter`는 조건에 맞는 값만 남기고 `forEach`는 각 항목에 작업을 수행합니다. 카드 생성에서는 템플릿 리터럴로 HTML 문자열을 만듭니다. 외부 문자열은 `escapeHTML()`을 거치고, 링크는 `safeRepoURL()`로 검사한 뒤 `innerHTML`에 넣습니다. 단순 안내는 `textContent`를 사용합니다.
 
-`[추가]` 기능도 현재 사이트에서는 동작합니다. 처음 공부할 때 읽는 순서를 구분한 것이며, 코드를 임의로 지우면 참조 관계가 끊어질 수 있습니다.
+`await fetch()`는 해당 비동기 함수의 다음 작업을 응답까지 기다리게 하며, 기다리는 동안 브라우저의 다른 상호작용은 계속됩니다. HTTP 403/500은 응답 자체가 도착한 것이므로 `response.ok`를 직접 검사해 오류로 처리합니다. `catch`에서 오류 상태를 저장하고 `finally`에서 타이머 정리와 최종 렌더링을 수행합니다. 빈 결과는 별도 `empty` 상태값 없이 **성공 응답의 배열 길이가 0인지**로 판단합니다.
 
-### 직접 설명해 보는 연습
-
-1. 테마 버튼을 누른 뒤 `state.theme`와 HTML의 `data-theme`가 어떻게 바뀌는지 확인합니다.
-2. 모바일 메뉴의 `state.menuOpen`, `active`, `aria-expanded`가 같은 열림 상태를 나타내는지 확인합니다.
-3. `loadProjects()`에서 요청 전에 로딩 화면을 먼저 표시하는 이유를 설명합니다. 캐시가 있으면 네트워크 요청을 생략합니다.
-4. `renderProjects()`에서 저장소가 0개이면 왜 빈 화면 안내가 나오는지 확인합니다. 현재 구현은 성공 상태와 배열 길이로 빈 결과를 판단합니다.
-5. 문의 폼을 빈 상태로 제출하고 입력을 수정하면서 `values`, `errors`, `renderForm()`의 역할을 구분합니다. 성공해도 실제 이메일을 전송하지는 않습니다.
-
-### 디자인 유지
-
-기존 배포본의 색상, 레이아웃, 프로필 이미지와 프레임, 애니메이션을 유지합니다. 이번 정리는 코드의 줄바꿈·들여쓰기·기능별 설명과 학습 문서를 개선하는 작업입니다.
-
-같은 프로젝트 데이터를 사용해 기존 코드와 정리한 코드의 데스크톱·모바일·다크 모드 화면을 비교했고, 전체 화면 캡처가 동일함을 확인했습니다.
-
-## 구현 기능
-
-- Hero, About, Skills, Projects, Contact, Footer와 각 섹션의 앵커 링크.
-- 768px 미만 모바일 메뉴, 768px 태블릿, 1024px 데스크톱 레이아웃.
-- 햄버거 열기/닫기, 링크 선택·외부 클릭·Escape·화면 크기 변경 시 닫기.
-- 부드러운 스크롤과 대상 포커스 이동, 본문 건너뛰기 링크.
-- **60px 이상** 스크롤 시 헤더 배경 변경, **300px 이상**에서 맨 위 버튼 표시.
-- 다크 모드와 `localStorage` 저장. 최초 방문 시 시스템 테마를 따르며, 직접 선택하기 전까지 시스템 테마 변경에도 반응.
-- Intersection Observer **threshold: 0.2**. 요소가 20% 보이면 한 번 등장. Observer가 없거나 동작 줄이기 설정이면 내용을 바로 표시.
-- `prefers-reduced-motion` 사용자는 부드러운 이동과 애니메이션을 생략.
-- GitHub 공개 저장소 조회, 언어별 필터, 별·포크 수·업데이트 날짜.
-- API 로딩/성공/에러/빈 상태, 재시도 버튼, 15초 요청 제한시간.
-- 이름·이메일·메시지 필수 검증, 공백 입력 방지, 이메일 형식 검증, 필드별 오류, 첫 오류로 포커스 이동, 메시지 글자 수.
-- 사용자 입력과 외부 API 문자열을 안전하게 렌더링. 외부 저장소 링크는 HTTPS GitHub 주소만 허용.
-
-문의 폼은 **학습용 검증 데모**입니다. 제출 이벤트에서 기본 이동을 막고 성공 메시지를 표시하며, 실제 이메일을 보내거나 입력 내용을 저장하지 않습니다. 실제 전송은 선택 과제로 남겨두었습니다. 소개 문구는 수정 가능한 학습용 초안이며, 실명이나 경력은 가정하지 않았습니다.
-
-## GitHub API
-
-`js/main.js`의 `GITHUB_USERNAME = "dooolll00"`에 연결된 본인 계정을 설정했습니다. 계정을 변경할 때 HTML의 자기소개·소셜 링크와 프로필 이미지도 함께 수정하세요.
+## API 설정과 예외 처리
 
 ```text
 https://api.github.com/users/dooolll00/repos?sort=updated&per_page=100&page=1
 ```
 
-`fetch`와 `async/await`로 조회하며 100개를 초과하면 다음 페이지를 불러옵니다. 인증 토큰을 사용하지 않습니다. 공개 저장소 전체가 대상이며 fork 저장소도 포함합니다. 언어가 없으면 `기타`로 분류합니다.
+계정을 바꾸려면 `js/main.js`의 `GITHUB_USERNAME`과 HTML 소개·소셜 링크·프로필 이미지도 수정합니다. fork를 포함한 공개 저장소를 조회하며, 언어가 없으면 `기타`로 표시합니다.
 
-반복 새로고침 시 요청을 줄이기 위해 성공 응답을 **5분간 localStorage 캐시**에 저장합니다. 에러는 캐시하지 않으며 재시도는 캐시를 건너뜁니다. 캐시가 손상되거나 브라우저 저장소가 차단되어도 조회할 수 있습니다. GitHub의 비인증 요청은 일반적으로 IP당 시간당 60회로 제한되며, 403/429 응답은 제한 안내와 재시도 UI로 표시합니다. 최신 저장소를 바로 확인하려면 개발자 도구에서 `portfolio-repos-dooolll00` 키를 삭제하거나 5분 뒤 새로고침하세요.
+- **5분 캐시:** `portfolio-repos-dooolll00`에 성공 응답을 저장해 요청 횟수를 줄입니다. 손상·만료 캐시는 무시하며, 재시도는 캐시를 건너뜁니다.
+- **100개 단위 페이지네이션:** 100개가 오면 다음 페이지도 요청합니다.
+- **15초 제한:** 전체 조회에 `AbortController`를 사용합니다. 페이지마다 15초를 새로 주는 방식이 아닙니다.
+- **데이터 검사:** `isRepoList()`로 배열 및 카드 렌더링에 필요한 항목 형식을 검사합니다. 잘못된 응답은 에러 UI로 표시합니다.
+- **저장소 차단:** 예외를 잡아 현재 페이지 기능은 유지합니다. 저장 자체가 불가능하면 새로고침 후 테마 유지와 캐시는 사용할 수 없습니다.
 
-## 학습 포인트
+미션에서 안내한 비인증 API 제한은 시간당 60회입니다. 오류 시 한도·접근 제한 안내를 표시합니다. 발표를 위해 실제 한도를 소진하지 마세요. 캐시를 비우려면 개발자 도구 Application → Local Storage에서 **`portfolio-repos-dooolll00` 키만 삭제**합니다.
 
-### 시맨틱 HTML
+## 검증 및 재현
 
-`header`는 사이트 상단, `nav`는 주요 이동 링크, `main`은 본문, `section`은 제목을 가진 주제 단위, `article`은 독립적으로 이해 가능한 기술·프로젝트 카드, `footer`는 저작권과 소셜 링크에 사용했습니다. 구조를 설명하는 태그이므로 보조 기술과 개발자가 페이지의 역할을 파악하기 쉽습니다. 단순 배치 묶음에만 `div`를 사용했습니다. 이미지의 `alt`, 폼의 `label for`와 `id`, 상태 안내의 `aria-live`도 연결했습니다.
+개발용 검증은 Python + Playwright가 설치된 환경에서 **실제 Google Chrome**을 실행합니다. 이 도구는 사이트의 의존성이 아니며 HTML에서 로드하지 않습니다.
 
-### Flexbox와 Grid
+```bash
+python3 -m venv /tmp/b1-1-review-venv
+/tmp/b1-1-review-venv/bin/pip install playwright
+python3 -m http.server 5511 --bind 127.0.0.1
+```
 
-Flexbox는 한 축에서 항목을 배치하기 좋습니다. 네비게이션에서 로고·메뉴·버튼을 한 줄로 정렬하고, 버튼 묶음과 카드 메타데이터에도 사용했습니다. Grid는 행과 열을 함께 설계하기 좋습니다. 프로젝트 목록은 `repeat(auto-fit, minmax(min(100%, 290px), 1fr))`로 가용 너비에 따라 열 수를 자동으로 바꿉니다. 좁은 모바일에서도 최소 카드 너비가 화면을 넘지 않습니다.
+위 서버를 켜 둔 채 다른 터미널에서 실행합니다. Google Chrome 설치가 필요합니다.
 
-### DOM과 이벤트
+```bash
+/tmp/b1-1-review-venv/bin/python tests/review.py
+# 실제 API·기존 Pages도 점검하고 로컬 스크린샷 3종을 갱신할 때:
+/tmp/b1-1-review-venv/bin/python tests/review.py --live
+```
 
-`querySelector`는 첫 요소, `querySelectorAll`은 일치하는 요소 목록을 선택합니다. 선택한 버튼에 `addEventListener("click", ...)`을 연결하고 상태를 바꾼 뒤 렌더링 함수를 호출합니다. `textContent`는 텍스트 안내에, `innerHTML`은 이스케이프한 카드 템플릿에 사용합니다. 클래스는 `classList.add/remove/toggle`로 관리합니다. HTML에 `onclick`이나 인라인 `style`은 없습니다.
+일반 실행은 API를 모의 응답으로 대체하므로 GitHub 한도를 사용하지 않습니다. `--live`는 실제 API를 사용하며 기존 스크린샷을 갱신합니다. 기존 Pages와 로컬 파일이 동일한지 판정하거나 배포하는 명령은 아닙니다.
 
-### 상태 → 화면
+2026-09-07, 설치된 **Chrome 146.0.7680.165**에서 `tests/review.py --live` 실행 결과 **29개 검증 항목 모두 통과**했습니다. 더 최신 버전의 Chrome을 별도로 설치하거나 검증한 것은 아닙니다.
 
-| 이벤트 | 변경되는 상태 | 화면 업데이트 |
-| --- | --- | --- |
-| 테마 버튼 클릭 | `state.theme` | `renderTheme()` → `data-theme`, 버튼 레이블 |
-| 메뉴 버튼 클릭 | `state.menuOpen` | `renderMenu()` → `active`, `aria-expanded` |
-| API 요청 시작/완료/실패 | `state.projects.status` | `renderProjects()` → 로딩/카드/에러/빈 결과 |
-| 언어 필터 클릭 | `state.projects.filter` | `filter()` 후 카드 렌더링, 선택 버튼 표시 |
-| 폼 입력/blur/submit | `state.form.values/errors/success` | `renderForm()` → 오류·글자 수·성공 안내 |
+| 검증 범위 | 결과 |
+| --- | --- |
+| 구조·앵커·label·alt·이미지 로딩·Flex/Grid | 통과 |
+| 320/375/767/768/1024/1440px, 가로 넘침·메뉴 표시·메뉴 영역 겹침 | 통과 |
+| 메뉴 재클릭·Escape·외부 클릭·앵커·폭 변경, 포커스 이동 | 통과 |
+| 스크롤 경계 59/60/299/300px, 맨 위 이동 | 통과 |
+| 시스템 테마·직접 선택 우선·새로고침 유지 | 통과 |
+| 폼 필수값·공백·이메일·성공·수정 후 초기화·글자 수 | 통과 |
+| API 로딩·성공·빈 결과·403/429/404/500·재시도·네트워크 실패 | 통과(모의 응답) |
+| 잘못된 응답·손상/만료/유효 캐시·저장소 차단·100+1개 페이지네이션·15초 제한 | 통과(모의 응답·가상 시간) |
+| 언어 필터·키보드 포커스·HTML 이스케이프·URL 검사 | 통과 |
+| 실제 Intersection Observer 등장, smooth 스크롤 CSS | 통과 |
+| 로컬·기존 Pages의 실제 API | 각 7개 공개 저장소 표시 확인 |
+| 로컬·기존 Pages의 테마·폼·모바일 메뉴·스크롤·반응형 | 통과 |
+| JavaScript 실행 오류 | 검증 중 없음 |
 
-상태는 화면이 기억해야 할 정보입니다. 이벤트 함수는 상태를 변경하고, 렌더링 함수는 상태를 DOM에 반영합니다. 이 구분이 React의 상태와 렌더링을 학습하는 기반이 됩니다. 폼은 처음부터 오류를 표시하지 않고 필드를 떠났거나 제출한 뒤 검사합니다.
-
-### ES6+와 비동기
-
-- 화살표 함수: 이벤트 콜백·렌더링 함수 등을 간결하게 정의합니다.
-- 구조분해 할당: `const { status, repos, filter, error } = state.projects` 및 저장소 필드를 추출합니다.
-- 템플릿 리터럴: `${...}`로 카드 HTML과 API 주소를 생성합니다.
-- `map`: 저장소 객체 목록을 HTML 문자열 목록으로 바꿉니다.
-- `filter`: 선택한 언어와 일치하는 저장소만 남깁니다.
-- `forEach`: 각 링크·필드·관찰 대상에 필요한 처리를 수행합니다.
-- `async/await`: 요청을 기다리는 동안 화면과 버튼을 계속 사용할 수 있습니다. 먼저 로딩을 렌더링하고 응답 후 성공 상태로 바꿉니다. `response.ok`를 검사해야 HTTP 403 같은 응답도 실패로 처리할 수 있습니다. `catch`에서 에러를 저장하고 `finally`에서 타이머를 정리한 후 최종 상태를 렌더링합니다.
-
-## 검증
-
-웹사이트는 순수 HTML/CSS/JavaScript로 동작합니다. 제출 전 별도 개발 환경에서 Chrome 자동 검증을 실행했습니다. Python 검증 도구와 의존성은 제출물에 포함하지 않습니다.
-
-검증 범위: 320/375/768/1024/1440px 가로 넘침, 모바일 메뉴, 키보드 Escape 및 앵커 포커스, 테마 새로고침 유지, 시스템 테마 변경, 필수/공백/이메일 검증, 입력 수정 시 성공 안내 초기화, 스크롤 버튼과 헤더, 언어 필터, 외부 HTML/URL 주입 방지, API 로딩/빈 결과/403/404/500/네트워크 오류/잘못된 응답/재시도/페이지네이션, 저장소 차단, 캐시, 실제 GitHub 데이터.
-
-위 자동 검증은 모두 통과했습니다. 추가로 동작 줄이기를 끈 Chrome에서 실제 Intersection Observer 등장 처리와 인라인 스타일·인라인 이벤트 부재, 이미지 alt를 확인했습니다.
-
-배포된 사이트에서도 Chrome으로 실제 GitHub 프로젝트 조회, 다크 모드 새로고침 유지, 문의 폼 검증, 320/375/768/1024/1440px 반응형, 모바일 메뉴, 맨 위 버튼, 이미지 로딩을 확인했습니다. JavaScript 실행 오류는 없었습니다.
+추가로 Python 문법, 문서의 로컬 링크, 금지 구문·속성, CSS 필수 선언, 설정 파일과 `git diff --check`를 확인했습니다. 스크린샷은 전체 화면으로 갱신하고 육안으로 확인했습니다. 테스트는 확인한 화면 크기와 시나리오의 근거이며 모든 기기·모든 입력에 대한 무오류 보장은 아닙니다. 배포 설정 화면 자체는 변경하거나 재확인하지 않았습니다.
 
 ## 스크린샷
 
-실제 GitHub API 응답을 이용한 로컬 Chrome 캡처입니다.
+로컬 최종 코드와 실제 GitHub 데이터를 사용한 Chrome 캡처입니다. API 데이터가 바뀌면 카드 개수와 순서는 달라질 수 있습니다.
 
 | 데스크톱 · 1440px | 모바일 · 375px | 다크 모드 · 1440px |
 | --- | --- | --- |
 | ![밝은 테마 데스크톱 전체 화면](images/screenshots/desktop.png) | ![모바일 전체 화면](images/screenshots/mobile.png) | ![다크 테마 데스크톱 전체 화면](images/screenshots/dark.png) |
 
-## 제출 및 배포 상태
+## 배포 방법
 
-- 업로드 대상 저장소: [dooolll00/B1-1](https://github.com/dooolll00/B1-1)
-- 제출 파일: 검토를 마친 HTML/CSS/JavaScript, 이미지, README와 개발 설정 및 학습 가이드 14개.
-- 업로드 브랜치: `main`. 불필요한 개발용 테스트 파일을 제외한 제출본입니다.
-- GitHub Pages: [포트폴리오 바로 보기](https://dooolll00.github.io/B1-1/) — 배포 및 공개 접속 확인 완료.
+Git 변경을 확인하고 필요한 파일만 커밋한 뒤 `main`으로 push합니다. GitHub 저장소 Settings → Pages에서 **Deploy from a branch → main → / (root)** 설정을 확인합니다. Actions의 Pages 배포가 성공하면 위 URL에서 반응형·메뉴·테마 저장·실제 API·폼을 다시 확인합니다. 파일 경로는 `css/style.css`처럼 상대 경로이므로 `/B1-1/` 하위 경로에서도 동작합니다.
 
-배포 설정은 Settings → Pages에서 관리합니다. `main` 브랜치의 정적 파일을 GitHub Pages로 제공합니다. 저장소 하위 경로에서도 작동하도록 로컬 리소스를 상대 경로로 연결했습니다.
-
-## 미션 요구사항 검토
-
-| 항목 | 결과 |
-| --- | --- |
-| HTML/CSS/JS 역할 분리, 이미지 폴더, Live Server | 완료 |
-| 시맨틱 태그, 6개 섹션, 앵커, 이미지 alt, 폼 label | 완료 |
-| CSS 변수, Flexbox/Grid, 768/1024px, hover/transition/shadow | 완료 |
-| defer, const/let, DOM 선택과 변경, click/submit/scroll/input | 완료 |
-| 모바일 메뉴, 부드러운 스크롤, 맨 위 버튼, 헤더 변경 | 완료 |
-| 다크 모드와 저장, Intersection Observer 0.2 | 완료 |
-| 필수값·공백·이메일 검증, 필드별 오류, 성공 안내 | 완료 |
-| 화살표 함수, 템플릿 리터럴, 구조분해, map/filter/forEach | 완료 |
-| 실제 GitHub API, 로딩/성공/에러/빈 상태, 403 및 재시도 | 완료 |
-| 3개 이상 상태 → 렌더링 흐름 | 완료 (테마/메뉴/API/필터/폼) |
-| README 설명·사용 기술·스크린샷 3종 | 완료 |
-| GitHub 제출 파일 및 GitHub Pages 공개 URL | 완료 — 공개 URL 접속 및 주요 기능 검증 |
-| 선택 과제 | 언어 필터와 시스템 테마 감지 구현; 타이핑·실제 이메일 전송 미구현 |
-
-제출물에는 사이트 소스, 필요한 이미지, 필수 스크린샷, README, Live Server 설정, 정적 배포 설정만 남겼습니다.
+이번 검토 작업에서는 commit/push나 배포 설정 변경을 수행하지 않았습니다.

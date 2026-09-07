@@ -167,6 +167,21 @@ if ("IntersectionObserver" in window) {
 }
 
 // 05. [필수] 프로젝트: 요청 시작 → loading → 성공/실패 → renderProjects
+// [추가] 배열 안의 항목도 검사해 손상된 캐시나 응답이 렌더링을 중단하지 않게 합니다.
+const isRepoList = (value) =>
+  Array.isArray(value) &&
+  value.every(
+    (repo) =>
+      repo !== null &&
+      typeof repo === "object" &&
+      typeof repo.name === "string" &&
+      repo.name.trim().length > 0 &&
+      typeof repo.html_url === "string" &&
+      typeof repo.updated_at === "string" &&
+      [repo.description, repo.language].every(
+        (field) => field == null || typeof field === "string",
+      ),
+  );
 // 외부 문자열을 innerHTML로 삽입하기 전에 이스케이프해 코드 실행을 막습니다.
 const escapeHTML = (value) =>
   String(value ?? "").replace(
@@ -337,7 +352,7 @@ const loadProjects = async (force = false) => {
     const validCache =
       !force &&
       cached &&
-      Array.isArray(cached.repos) &&
+      isRepoList(cached.repos) &&
       Date.now() - cached.time >= 0 &&
       Date.now() - cached.time < CACHE_TTL;
     let repos = validCache ? cached.repos : [];
@@ -367,7 +382,7 @@ const loadProjects = async (force = false) => {
           );
         }
         const data = await response.json();
-        if (!Array.isArray(data)) {
+        if (!isRepoList(data)) {
           throw new Error("올바르지 않은 응답을 받았습니다.");
         }
         repos.push(...data);

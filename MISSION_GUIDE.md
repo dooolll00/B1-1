@@ -1,10 +1,12 @@
 # 반응형 포트폴리오 미션 수행 가이드
 
-이 가이드는 현재 저장소의 코드를 이해하고, 같은 기능을 단계별로 직접 구현하는 방법을 설명합니다. 디자인은 현재 배포본을 유지합니다. 새 프레임워크나 라이브러리는 사용하지 않습니다.
+이 가이드는 현재 저장소의 코드를 이해하고, 같은 기능을 단계별로 직접 구현하는 방법을 설명합니다. 로컬 디자인은 사용자 요청에 따라 블루·퍼플 테마와 Pretendard 웹 폰트를 적용했습니다. 웹 폰트는 미션에서 허용하며, UI 프레임워크는 사용하지 않습니다. 최신 배포 반영 여부는 README에서 확인합니다.
 
 - 실제 사이트: https://dooolll00.github.io/B1-1/
 - 저장소: https://github.com/dooolll00/B1-1
-- 구현 설명과 검증 범위: [README](README.md)
+- 구현 설명과 최신 검증 결과: [README](README.md)
+- 공식 검토 기준: [사용자가 제공한 미션 원문](MISSION_REQUIREMENTS.md)
+- 발표 준비: [발표 가이드](PRESENTATION_GUIDE.md)
 - 기준 파일: [HTML](index.html), [CSS](css/style.css), [JavaScript](js/main.js)
 
 ## 1. 먼저 알아둘 것
@@ -17,14 +19,14 @@
 
 HTML은 구조, CSS는 표현, JavaScript는 동작을 담당합니다. 상태는 화면이 기억할 값이고, 렌더링은 그 값을 화면에 반영하는 과정입니다.
 
-현재 프로젝트는 이미 완성되어 있습니다. 아래 코드 조각은 흐름을 설명하는 예시이므로 기존 `main.js`에 다시 붙여넣지 마세요. 같은 변수나 이벤트를 중복 선언하면 오류나 중복 실행이 생깁니다. 직접 처음부터 연습하려면 별도 폴더에서 시작하고, 각 단계의 완성 코드를 현재 파일과 비교하세요.
+현재 프로젝트는 필수 기능을 구현한 상태이며, 이번 검토 결과와 배포 반영 여부는 README를 기준으로 확인합니다. 아래 코드 조각은 흐름을 설명하는 예시이므로 기존 `main.js`에 다시 붙여넣지 마세요. 같은 변수나 이벤트를 중복 선언하면 오류나 중복 실행이 생깁니다. 직접 처음부터 연습하려면 별도 폴더에서 시작하고, 각 단계의 완성 코드를 현재 파일과 비교하세요.
 
 ## 2. 개발 환경 준비
 
-VS Code에서 `portfolio` 폴더를 엽니다. Live Server 확장(`ritwickdey.LiveServer`)을 설치하고 `index.html`을 우클릭해 **Open with Live Server**를 선택합니다. 현재 환경에는 설치되어 있습니다.
+VS Code에서 `B1-1` 폴더를 엽니다. Live Server 확장(`ritwickdey.LiveServer`)을 설치하고 `index.html`을 우클릭해 **Open with Live Server**를 선택합니다. 2026-09-07 이번 작업 환경에서 설치를 확인했습니다. 다른 환경에서는 별도로 설치합니다.
 
 ```text
-portfolio/
+B1-1/
 ├── index.html
 ├── css/style.css
 ├── js/main.js
@@ -221,7 +223,7 @@ submit → preventDefault()
 
 1. 정상 접속: 프로젝트 카드와 모든 이미지 확인.
 2. 로딩: Chrome Network에서 느린 네트워크를 선택하고 API 캐시를 삭제한 뒤 새로고침.
-3. 네트워크 오류: Network의 Offline 설정 후 API 캐시를 삭제하고 새로고침. 오류 화면을 확인한 뒤 Online으로 되돌려 재시도.
+3. 네트워크 오류: 로컬 페이지를 먼저 연 상태에서 API 요청만 차단하고 `loadProjects(true)`로 다시 조회합니다. 전체 Offline 후 새로고침하면 HTML 자체가 로드되지 않을 수 있습니다. 차단을 해제한 뒤 재시도합니다.
 4. 빈 결과·403: 개발용 요청 모킹으로 각각 `[]`, HTTP 403을 반환해 검증. 실제 API 한도를 소진하지 않기.
 5. 테마: 다크 모드를 켜고 새로고침.
 6. 폼: 빈 값 → 잘못된 이메일 → 정상 값 순서로 제출.
@@ -229,11 +231,11 @@ submit → preventDefault()
 
 캐시는 개발자 도구 Application → Local Storage에서 `portfolio-repos-dooolll00` 키만 삭제합니다. 개인정보나 다른 사이트의 저장소를 지울 필요는 없습니다. 테스트를 마치면 네트워크 설정을 원래대로 돌립니다.
 
-현재 제출본은 별도 개발 환경에서 로딩·빈 결과·403·404·500·네트워크 실패·잘못된 응답·재시도·캐시·페이지네이션·저장소 차단을 자동 검증했습니다. 테스트용 Python과 라이브러리는 사이트에 포함하지 않습니다.
+재현 가능한 개발용 자동 검증은 `tests/review.py`에 있습니다. 실행 명령과 최신 결과는 README의 검증 항목을 참고합니다. Python과 Playwright는 사이트에서 사용하지 않는 개발용 도구입니다. 빈 상태·403 발표 시연은 발표 가이드에 정리했습니다.
 
 ## 12. GitHub 업로드와 Pages 배포
 
-현재 결과물은 GitHub 도구로 업로드했으므로 기존 로컬 `portfolio` 폴더에는 `.git`이 없을 수 있습니다. 직접 Git을 연습하려면 별도 폴더에 복제합니다.
+현재 B1-1은 `origin`이 연결된 Git 저장소입니다. 이번 로컬 수정은 아직 commit/push하지 않았습니다. 기존 폴더를 다시 초기화할 필요가 없습니다. 별도 연습용 복제본이 필요할 때만 다음 명령을 사용합니다.
 
 ```bash
 git clone https://github.com/dooolll00/B1-1.git portfolio-git-practice
@@ -245,7 +247,7 @@ git status
 
 ```bash
 git diff
-git add index.html css/style.css js/main.js images README.md MISSION_GUIDE.md
+git add index.html css/style.css js/main.js images README.md MISSION_GUIDE.md MISSION_REQUIREMENTS.md PRESENTATION_GUIDE.md tests/review.py WORK_LOG.md
 git commit -m "Improve portfolio learning guide"
 git push origin main
 ```
