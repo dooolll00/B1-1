@@ -2,7 +2,7 @@
 
 이 가이드는 현재 저장소의 코드를 이해하고, 같은 기능을 단계별로 직접 구현하는 방법을 설명합니다. 로컬 디자인은 사용자 요청에 따라 블루·퍼플 테마와 Pretendard 웹 폰트를 적용했습니다. 웹 폰트는 미션에서 허용하며, UI 프레임워크는 사용하지 않습니다. 최신 배포 반영 여부는 README에서 확인합니다.
 
-- 실제 사이트: https://dooolll00.github.io/B1-1/
+- 배포 사이트: https://dooolll00.github.io/B1-1/
 - 저장소: https://github.com/dooolll00/B1-1
 - 구현 설명과 최신 검증 결과: [README](README.md)
 - 공식 검토 기준: [사용자가 제공한 미션 원문](MISSION_REQUIREMENTS.md)
@@ -235,7 +235,7 @@ submit → preventDefault()
 
 ## 12. GitHub 업로드와 Pages 배포
 
-현재 B1-1은 `origin`이 연결된 Git 저장소입니다. 이번 로컬 수정은 아직 commit/push하지 않았습니다. 기존 폴더를 다시 초기화할 필요가 없습니다. 별도 연습용 복제본이 필요할 때만 다음 명령을 사용합니다.
+현재 B1-1은 `origin`이 연결된 Git 저장소입니다. 2026-09-07 변경 사항을 main에 커밋·업로드하고 Pages 배포를 확인했습니다. 기존 폴더를 다시 초기화할 필요가 없습니다. 별도 연습용 복제본이 필요할 때만 다음 명령을 사용합니다.
 
 ```bash
 git clone https://github.com/dooolll00/B1-1.git portfolio-git-practice

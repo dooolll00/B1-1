@@ -128,3 +128,31 @@
 - 커밋 메시지: feat: refresh portfolio theme and complete mission review materials
 - 진행 상태: 이 기록을 포함해 main에 커밋·push하고, 해당 커밋의 Pages 배포와 공개 사이트에서 새 CSS·JS·Footer 및 주요 기능을 확인한다. 실제 push·배포 결과는 후속 기록에 추가한다.
 - 미해결/다음 작업: 배포 완료 확인과 README·발표 가이드의 배포 상태 갱신.
+
+## 2026-09-07 19:59 KST — 커밋·원격 업로드·Pages 배포 확인 완료
+
+### 요청 및 변경 파일
+- 사용자 요청: 누적 변경 사항의 커밋·push·배포.
+- 기능·디자인·테스트·스크린샷·문서 12개 파일을 커밋했다. 이후 README.md, MISSION_GUIDE.md, PRESENTATION_GUIDE.md의 배포 전 안내를 완료로 수정하고 WORK_LOG.md에 결과를 추가했다.
+
+### 커밋과 push 결과
+- 기능 커밋 메시지: `feat: refresh portfolio theme and complete mission review materials`.
+- 최초 로컬 커밋: `62ac6b6`. 터미널 `git push origin main`은 GitHub 사용자 인증이 없어 실패했다.
+- 연결된 GitHub 앱으로 blob/tree/commit을 생성하고 force 없이 main을 갱신해 원격 업로드를 완료했다. 원격 커밋: `e318a2969fba0d9cb774c100dadcaf7c3194b2e6`.
+- 로컬·원격 파일 트리는 `5db4167ce7654568c5082e158382eca2d0dc9bce`로 정확히 동일했다. 작성 메타데이터 차이로 커밋 SHA만 달라졌다.
+- 최초 로컬 커밋은 `backup/b1-1-local-before-app-upload` 브랜치로 보존했다. fetch 후 rebase에서 이미 반영된 동일 변경이 생략되어 main이 원격과 동기화됐다. 원격 강제 push나 기존 파일 삭제 없음.
+- 배포 완료 기록 커밋 메시지: `docs: record successful portfolio deployment`. 이 문서 갱신도 같은 GitHub 앱 방식으로 커밋하고 main에 반영한다.
+
+### 배포 및 검증 결과
+- `pages build and deployment` 실행 `34114075751`: completed / success, 대상 커밋 e318a29.
+- 작업 URL: https://github.com/dooolll00/B1-1/actions/runs/34114075751
+- 공개 URL: https://dooolll00.github.io/B1-1/
+- 공개 index.html, css/style.css, js/main.js를 다운로드해 로컬 파일과 바이트 일치 확인.
+- 실제 Chrome 공개 사이트 검증: HTTP 200, Pretendard 로딩, 새 라이트·다크 배경색, 테마 새로고침 유지, 320/375/768/1024/1440px 가로 넘침 없음, 모바일 메뉴·Footer 앵커·포커스, 맨 위 이동, 폼 필수값·성공 안내, 이미지, 실제 GitHub 저장소 7개 표시 통과. JS 실행 오류 없음.
+- 검증 명령: 기존 Chrome 29개 통과 결과 확인, `/tmp/b1-1-review-venv/bin/python /tmp/b1-1-deploy-check.py`, git diff --check, GitHub Actions API 조회.
+- 배포 설정은 변경하지 않았으며 main 갱신으로 기존 Pages 워크플로가 자동 실행됐다.
+
+### 미해결·다음 작업
+- 요청한 기능·디자인 변경의 공개 배포와 동작 검증 완료.
+- 터미널 GitHub 인증은 설정하지 않았다. 이번 업로드는 인증된 앱 연결을 사용했으며, 향후 터미널에서 직접 push하려면 별도 GitHub 인증이 필요하다.
+- 발표 가이드로 설명을 연습하고 이후 수정 때도 배포 후 주요 기능을 확인한다.

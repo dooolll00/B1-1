@@ -14,7 +14,7 @@ HTML, CSS, JavaScript만으로 만든 반응형 포트폴리오입니다. **사�
 
 이번 보완에서는 모든 구역에 접근할 수 있도록 Footer 메뉴와 앵커를 추가했습니다. API 배열 내부의 잘못된 항목을 검사하고, 손상된 캐시는 무시한 뒤 다시 조회하도록 수정했습니다. 이전에는 `[null]` 같은 캐시가 남아 있으면 네트워크가 정상이어도 네트워크 오류로 표시됐습니다.
 
-**배포 구분:** 위 URL은 기존 배포본입니다. 이번 로컬 수정은 아직 commit/push하지 않았으므로 새 Footer 링크, 데이터 검증 보완, 블루·퍼플 디자인은 배포 반영 전입니다. 배포 확인 결과와 로컬 테스트 결과는 아래 검증 항목을 참고하세요.
+**배포 완료(2026-09-07):** 새 Footer 링크, 데이터 검증 보완, 블루·퍼플 디자인과 Pretendard가 공개 사이트에 반영됐습니다. 배포 커밋은 `e318a29`이며 [Pages 배포 작업](https://github.com/dooolll00/B1-1/actions/runs/34114075751)이 성공했습니다. 공개 HTML·CSS·JavaScript가 로컬 파일과 일치하고 실제 Chrome 주요 기능 검증도 통과했습니다.
 
 ## 디자인
 
@@ -117,7 +117,7 @@ B1-1/
 - [x] 순수 HTML/CSS/JavaScript; React/Vue/jQuery/Bootstrap/Tailwind 등 런타임 라이브러리 없음.
 - [x] README에 프로젝트 설명·사용 기술·저장소 URL·Pages URL·스크린샷 3종 포함.
 - [x] 기존 GitHub Pages URL 존재 및 HTTP 200 응답 확인.
-- [ ] 이번 수정 사항을 GitHub에 commit/push하고 Pages 배포 완료 후 최종본 재검증.
+- [x] 변경 사항을 GitHub main에 커밋·업로드하고 Pages 배포 완료 후 최종본 재검증(2026-09-07).
 - [ ] 발표자가 학습 목표 6개를 코드와 연결해 직접 설명하기 — [발표 가이드](PRESENTATION_GUIDE.md).
 
 ### 보너스 과제(선택)
@@ -215,4 +215,4 @@ python3 -m http.server 5511 --bind 127.0.0.1
 
 Git 변경을 확인하고 필요한 파일만 커밋한 뒤 `main`으로 push합니다. GitHub 저장소 Settings → Pages에서 **Deploy from a branch → main → / (root)** 설정을 확인합니다. Actions의 Pages 배포가 성공하면 위 URL에서 반응형·메뉴·테마 저장·실제 API·폼을 다시 확인합니다. 파일 경로는 `css/style.css`처럼 상대 경로이므로 `/B1-1/` 하위 경로에서도 동작합니다.
 
-이번 검토 작업에서는 commit/push나 배포 설정 변경을 수행하지 않았습니다.
+2026-09-07 사용자 요청으로 변경 사항을 main에 커밋·업로드하고 Pages 배포를 완료했습니다. 터미널 Git 인증이 없어 GitHub 앱으로 동일한 파일 트리의 커밋을 만들고 main을 갱신했으며, 로컬 main도 원격과 동기화했습니다. 배포 설정 변경은 필요하지 않았습니다. 새 공개본에서 320/375/768/1024/1440px 반응형, Pretendard, 테마 저장·복원, Footer 메뉴·포커스, 맨 위 이동, 문의 폼, 이미지, 실제 GitHub 저장소 7개 표시를 확인했고 JavaScript 실행 오류가 없었습니다.
