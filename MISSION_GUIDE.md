@@ -156,13 +156,13 @@ menuButton.addEventListener("click", () => {
 
 ## 8. GitHub API: 요청과 4가지 화면 상태
 
-`05. [필수] 프로젝트`에서 먼저 `loadProjects()`와 `renderProjects()`를 읽습니다. 캐시·페이지네이션은 이후에 읽어도 됩니다.
+`05. [필수] 프로젝트`에서 먼저 `loadProjects()`와 `renderProjects()`를 읽습니다. `loadProjects()`는 상태 흐름, `renderProjects()`는 상태별 화면을 담당합니다. 카드 모양은 `createProjectCard()`, 실제 API 요청은 `fetchAllRepos()`, HTTP 검사는 `checkRepoResponse()`, 캐시는 `readProjectCache()`로 분리했습니다. 캐시·페이지네이션은 이후에 읽어도 됩니다.
 
 ```text
 loadProjects()
 → status = loading → 로딩 렌더링
-→ await fetch(...)
-→ response.ok 검사
+→ fetchAllRepos()에서 await fetch(...)
+→ checkRepoResponse()에서 response.ok 검사
 → await response.json()
 → repos 저장, status = success
 → renderProjects()
@@ -181,7 +181,7 @@ loadProjects()
 
 현재 구현은 `empty`라는 별도 상태값 대신 성공 응답의 배열 길이로 빈 결과를 판단합니다. 가이드 예제처럼 별도 상태값을 두는 방식과 모두 가능합니다.
 
-`map()`은 저장소를 HTML 카드 문자열로 바꾸고, `join("")`은 하나로 합칩니다. 구조분해 할당으로 `name`, `description` 등의 값을 꺼냅니다. 외부 문자열은 `escapeHTML()`로 처리한 뒤 `innerHTML`에 넣습니다.
+`map(createProjectCard)`는 저장소마다 카드 생성 함수를 호출하고, `join("")`은 하나로 합칩니다. 구조분해 할당으로 `name`, `description` 등의 값을 꺼냅니다. 외부 문자열은 `escapeHTML()`로 처리한 뒤 `innerHTML`에 넣습니다.
 
 **완료 기준:** 실제 저장소가 표시되고 링크가 올바릅니다. 비인증 API는 호출 제한이 있으므로 403 테스트를 위해 실제 요청을 반복하지 마세요.
 
@@ -210,7 +210,7 @@ submit → preventDefault()
 | 언어 필터 | 언어별 저장소 표시 | `renderFilters()`, `filter()` |
 | 시스템 테마 | 최초 사용자 설정 반영 | `systemTheme`, `explicitTheme` |
 | 5분 캐시 | 불필요한 API 호출 감소 | `CACHE_TTL`, `readStorage()` |
-| 페이지네이션 | 100개를 넘는 저장소 조회 | `page`, `hasMore` |
+| 페이지네이션 | 100개를 넘는 저장소 조회 | `fetchAllRepos()`, `page`, `hasMore` |
 | 15초 제한 | 응답이 없는 요청 종료 | `AbortController`, `setTimeout()` |
 | 접근성 | 키보드·화면 낭독기·동작 줄이기 대응 | `aria-*`, 포커스, 미디어 쿼리 |
 

@@ -93,26 +93,27 @@ const renderMenu = () => {
   menuButton.setAttribute("aria-expanded", String(state.menuOpen));
   menuButton.setAttribute("aria-label", state.menuOpen ? "메뉴 닫기" : "메뉴 열기");
 };
-menuButton.addEventListener("click", () => {
-  state.menuOpen = !state.menuOpen;
+// 모든 메뉴 이벤트는 이 함수로 상태와 화면을 함께 갱신합니다.
+const setMenuOpen = (open) => {
+  state.menuOpen = open;
   renderMenu();
+};
+menuButton.addEventListener("click", () => {
+  setMenuOpen(!state.menuOpen);
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && state.menuOpen) {
-    state.menuOpen = false;
-    renderMenu();
+    setMenuOpen(false);
     menuButton.focus();
   }
 });
 document.addEventListener("click", (event) => {
   if (state.menuOpen && !event.target.closest(".nav")) {
-    state.menuOpen = false;
-    renderMenu();
+    setMenuOpen(false);
   }
 });
 window.matchMedia("(min-width: 768px)").addEventListener("change", () => {
-  state.menuOpen = false;
-  renderMenu();
+  setMenuOpen(false);
 });
 // 04. [필수] 앵커 이동, 스크롤에 따른 헤더와 맨 위 버튼, 등장 애니메이션
 const scrollBehavior = () => (reducedMotion.matches ? "auto" : "smooth");
@@ -123,8 +124,7 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
       return;
     }
     event.preventDefault();
-    state.menuOpen = false;
-    renderMenu();
+    setMenuOpen(false);
     target.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
     if (!target.hasAttribute("tabindex")) {
       target.setAttribute("tabindex", "-1");
@@ -219,6 +219,57 @@ const renderFilters = () => {
     )
     .join("");
 };
+// 카드 한 개의 HTML을 만듭니다. 화면에 넣는 일은 renderProjects가 담당합니다.
+const createProjectCard = (repo, index) => {
+  const {
+    name, description, language, stargazers_count, forks_count, html_url, updated_at,
+  } = repo;
+  const date = new Date(updated_at);
+  const updated = Number.isNaN(date.getTime())
+    ? ""
+    : date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+  return /* HTML */ `
+    <article class="project-card">
+      <div class="project-top">
+        <span
+          class="repo-icon"
+          aria-hidden="true"
+        >
+          ⌘
+        </span>
+        <span class="project-number">
+          PROJECT / ${String(index + 1).padStart(2, "0")}
+        </span>
+      </div>
+      <h3>
+        <a
+          href="${escapeHTML(safeRepoURL(html_url))}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ${escapeHTML(name)} ↗
+        </a>
+      </h3>
+      <p>
+        ${escapeHTML(description || "코드를 통해 배움을 기록하는 프로젝트입니다. GitHub에서 자세한 내용을 확인해 보세요.")}
+      </p>
+      <div class="project-meta">
+        <span class="language">● ${escapeHTML(language || "기타")}</span>
+        <span aria-label="별 ${Number(stargazers_count) || 0}개">
+          ☆ ${Number(stargazers_count) || 0}
+        </span>
+        <span aria-label="포크 ${Number(forks_count) || 0}개">
+          ⑂ ${Number(forks_count) || 0}
+        </span>
+      </div>
+      <span class="project-date">${escapeHTML(updated)} 업데이트</span>
+    </article>
+  `;
+};
 const renderProjects = () => {
   const { status, repos, filter, error } = state.projects;
   projectList.setAttribute("aria-busy", String(status === "loading"));
@@ -268,69 +319,54 @@ const renderProjects = () => {
     `;
     return;
   }
-  // map은 저장소 객체를 HTML 문자열로 변환하고, join은 하나의 문자열로 합칩니다.
-  projectList.innerHTML = visible
-    .map(
-      (
-        {
-          name,
-          description,
-          language,
-          stargazers_count,
-          forks_count,
-          html_url,
-          updated_at,
-        },
-        index,
-      ) => {
-        const date = new Date(updated_at);
-        const updated = Number.isNaN(date.getTime())
-          ? ""
-          : date.toLocaleDateString("ko-KR", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            });
-        return /* HTML */ `
-          <article class="project-card">
-            <div class="project-top">
-              <span
-                class="repo-icon"
-                aria-hidden="true"
-              >
-                ⌘
-              </span>
-              <span class="project-number">
-                PROJECT / ${String(index + 1).padStart(2, "0")}
-              </span>
-            </div>
-            <h3>
-              <a
-                href="${escapeHTML(safeRepoURL(html_url))}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ${escapeHTML(name)} ↗
-              </a>
-            </h3>
-            <p>
-              ${escapeHTML(description || "코드를 통해 배움을 기록하는 프로젝트입니다. GitHub에서 자세한 내용을 확인해 보세요.")}
-            </p>
-            <div class="project-meta">
-              <span class="language">● ${escapeHTML(language || "기타")}</span>
-              <span aria-label="별 ${Number(stargazers_count) || 0}개">
-                ☆ ${Number(stargazers_count) || 0}
-              </span>
-              <span aria-label="포크 ${Number(forks_count) || 0}개">
-                ⑂ ${Number(forks_count) || 0}
-              </span>
-            </div>
-            <span class="project-date">${escapeHTML(updated)} 업데이트</span>
-          </article>
-        `;
-      },
-    )
-    .join("");
+  // map으로 각 저장소를 카드로 바꾸고 join으로 합쳐 화면에 넣습니다.
+  projectList.innerHTML = visible.map(createProjectCard).join("");
+};
+// [추가] 유효한 캐시만 반환합니다. 없거나 손상·만료됐으면 null입니다.
+const readProjectCache = () => {
+  try {
+    const cached = JSON.parse(readStorage(CACHE_KEY));
+    if (!cached || !isRepoList(cached.repos)) return null;
+    const age = Date.now() - cached.time;
+    return age >= 0 && age < CACHE_TTL ? cached.repos : null;
+  } catch {
+    return null;
+  }
+};
+// HTTP 오류도 응답이 도착한 것이므로 상태 코드를 직접 검사합니다.
+const checkRepoResponse = (response) => {
+  if (response.ok) return;
+  if (response.status === 403 || response.status === 429) {
+    throw new Error(
+      "GitHub 요청 한도에 도달했거나 접근이 제한되었습니다. 잠시 후 다시 시도해 주세요.",
+    );
+  }
+  if (response.status === 404) {
+    throw new Error("GitHub 계정을 찾을 수 없습니다. 계정 설정을 확인해 주세요.");
+  }
+  throw new Error(`GitHub 서버 응답 오류 (${response.status}). 잠시 후 다시 시도해 주세요.`);
+};
+// 저장소 데이터를 가져옵니다. 상태 변경과 화면 갱신은 loadProjects가 담당합니다.
+const fetchAllRepos = async (signal) => {
+  const repos = [];
+  let page = 1;
+  let hasMore = true;
+  do {
+    const response = await fetch(
+      `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100&page=${page}`,
+      { signal, headers: { Accept: "application/vnd.github+json" } },
+    );
+    checkRepoResponse(response);
+    const data = await response.json();
+    if (!isRepoList(data)) {
+      throw new Error("올바르지 않은 응답을 받았습니다.");
+    }
+    repos.push(...data);
+    // [추가] 100개가 왔으면 다음 페이지도 조회합니다. 같은 요청 시간 제한을 공유합니다.
+    hasMore = data.length === 100;
+    page += 1;
+  } while (hasMore);
+  return repos;
 };
 // [필수] fetch + async/await + try/catch. 캐시와 시간 제한은 [추가] 처리입니다.
 const loadProjects = async (force = false) => {
@@ -343,52 +379,9 @@ const loadProjects = async (force = false) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
   try {
-    let cached = null;
-    try {
-      cached = JSON.parse(readStorage(CACHE_KEY));
-    } catch {
-      /* 손상된 캐시는 무시한다. */
-    }
-    const validCache =
-      !force &&
-      cached &&
-      isRepoList(cached.repos) &&
-      Date.now() - cached.time >= 0 &&
-      Date.now() - cached.time < CACHE_TTL;
-    let repos = validCache ? cached.repos : [];
-    if (!validCache) {
-      // 100개를 넘는 계정도 전체 공개 저장소를 불러온다.
-      let page = 1;
-      let hasMore = true;
-      while (hasMore) {
-        const response = await fetch(
-          `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100&page=${page}`,
-          {
-            signal: controller.signal,
-            headers: { Accept: "application/vnd.github+json" },
-          },
-        );
-        if (!response.ok) {
-          if (response.status === 403 || response.status === 429) {
-            throw new Error(
-              "GitHub 요청 한도에 도달했거나 접근이 제한되었습니다. 잠시 후 다시 시도해 주세요.",
-            );
-          }
-          if (response.status === 404) {
-            throw new Error("GitHub 계정을 찾을 수 없습니다. 계정 설정을 확인해 주세요.");
-          }
-          throw new Error(
-            `GitHub 서버 응답 오류 (${response.status}). 잠시 후 다시 시도해 주세요.`,
-          );
-        }
-        const data = await response.json();
-        if (!isRepoList(data)) {
-          throw new Error("올바르지 않은 응답을 받았습니다.");
-        }
-        repos.push(...data);
-        hasMore = data.length === 100;
-        page += 1;
-      }
+    const cached = force ? null : readProjectCache();
+    const repos = cached ?? (await fetchAllRepos(controller.signal));
+    if (cached === null) {
       writeStorage(CACHE_KEY, JSON.stringify({ time: Date.now(), repos }));
     }
     state.projects.repos = repos;
@@ -454,10 +447,10 @@ const validateField = (name) => {
   return "";
 };
 const renderForm = () => {
-  fields.forEach(({ name, id }) => {
-    const error = state.form.errors[name] || "";
-    document.querySelector(`#${id}-error`).textContent = error;
-    document.querySelector(`#${id}`).setAttribute("aria-invalid", String(Boolean(error)));
+  fields.forEach((field) => {
+    const error = state.form.errors[field.name] || "";
+    document.querySelector(`#${field.id}-error`).textContent = error;
+    field.setAttribute("aria-invalid", String(Boolean(error)));
   });
   document.querySelector("#message-count").textContent =
     `${state.form.values.message.length} / 2000`;

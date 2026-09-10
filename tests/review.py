@@ -1,10 +1,29 @@
 # -*- coding: utf-8 -*-
-"""Run with a local server: python tests/review.py [--live]. Requires Playwright + Chrome."""
+"""사이트 기능을 Chrome으로 자동 점검하는 개발용 파일입니다.
+
+사이트 화면을 만드는 파일은 아닙니다. index.html에서 불러오지 않습니다.
+Python은 검사 도구를 실행하고, Playwright는 Chrome의 클릭·입력·확인을 자동화합니다.
+미션 필수 구현은 HTML/CSS/JavaScript이며 이 파일의 Python 학습은 필수가 아닙니다.
+
+실행 준비와 파일 역할: ../FILE_GUIDE.md 참고.
+B1-1 폴더에서 로컬 서버를 먼저 실행합니다:
+    python3 -m http.server 5511 --bind 127.0.0.1
+다른 터미널에서 Python + Playwright가 설치된 환경으로 실행합니다:
+    python tests/review.py          # 모의 GitHub 데이터로 검사
+    python tests/review.py --live   # 실제 API·공개 사이트도 검사, 스크린샷 갱신
+
+--live는 images/screenshots의 기존 이미지 3개를 덮어씁니다. 배포 명령은 아닙니다.
+PASS는 해당 검사 통과, ALL PASS는 실행한 검사 전체 통과입니다.
+실패하면 오류가 난 위치에서 중단하므로 마지막 오류 내용을 확인합니다.
+
+읽는 순서: 01 설정 → 02 공통 검사 → 03~14 기능별 검사 → 15 실제 사이트 → 16 실행.
+"""
 import argparse
 import json
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
 
+# 01. 검사 주소와 연습용 저장소 데이터: 실제 계정에 저장하거나 업로드하지 않습니다.
 BASE = 'http://127.0.0.1:5511'
 API = 'https://api.github.com/**'
 KEY = 'portfolio-repos-dooolll00'
@@ -16,6 +35,7 @@ REPOS = [dict(name='alpha', description='First project', language='JavaScript',
               stargazers_count=0, forks_count=0)]
 passed = []
 
+# 02. 공통 검사 도우미: 검사 실행 후 통과한 이름을 기록합니다.
 def check(name, fn):
     fn()
     passed.append(name)
@@ -27,6 +47,8 @@ def main(live):
         browser = p.chromium.launch(channel='chrome', headless=True)
         print('Chrome:', browser.version, flush=True)
 
+        # 각 검사를 새 브라우저 환경에서 시작해 이전 테마·캐시가 섞이지 않게 합니다.
+        # handler는 GitHub 대신 돌려줄 모의 응답, init은 페이지 시작 전 준비 코드입니다.
         def scenario(name, test, handler=None, init=None, **options):
             context = browser.new_context(color_scheme='light', reduced_motion='reduce', **options)
             if init:
@@ -46,6 +68,7 @@ def main(live):
             finally:
                 context.close()
 
+        # 03. HTML 구조: 섹션·링크·레이블·이미지·Flex/Grid 확인
         def structure(page):
             expect(page.locator('.project-card')).to_have_count(2)
             for tag in ['header', 'nav', 'main', 'section', 'article', 'footer']:
@@ -65,6 +88,7 @@ def main(live):
             assert page.locator('.projects-grid').evaluate('(e) => getComputedStyle(e).display') == 'grid'
         scenario('semantic structure, all anchors, labels, alt, assets, Flex/Grid', structure)
 
+        # 04. 반응형: 여러 화면 너비에서 가로 넘침과 메뉴 표시 확인
         def responsive(page):
             expect(page.locator('.project-card')).to_have_count(2)
             for width in [320, 375, 767, 768, 1024, 1440]:
@@ -84,6 +108,7 @@ def main(live):
                     assert page.locator('#nav-menu').evaluate('(e) => e.getBoundingClientRect().right <= document.querySelector(".nav-actions").getBoundingClientRect().left'), width
         scenario('responsive 320/375/767/768/1024/1440, mobile menu', responsive)
 
+        # 05. 메뉴와 스크롤: 닫기·포커스·60px/300px 경계 확인
         def menu_scroll(page, target='footer'):
             page.locator('#menu-toggle').click()
             page.keyboard.press('Escape')
@@ -111,6 +136,7 @@ def main(live):
             expect(page.locator('#menu-toggle')).to_have_attribute('aria-expanded', 'false')
         scenario('menu Escape/outside/anchor/resize, focus, 59/60/299/300px scroll', menu_scroll, viewport=dict(width=375, height=900))
 
+        # 06. 테마: 시스템 설정·직접 선택·새로고침 후 저장 확인
         def theme(page):
             expect(page.locator('html')).to_have_attribute('data-theme', 'light')
             page.emulate_media(color_scheme='dark')
@@ -125,6 +151,7 @@ def main(live):
             assert page.evaluate("localStorage.getItem('portfolio-theme')") == 'dark'
         scenario('system theme, manual preference, reload persistence', theme)
 
+        # 07. 문의 폼: 빈 값·공백·이메일 오류·성공·수정 후 초기화 확인
         def form(page):
             submit = page.locator('#contact-form button[type="submit"]')
             submit.click()
@@ -149,6 +176,7 @@ def main(live):
             expect(page.locator('#form-status')).to_be_empty()
         scenario('form required/whitespace/email/success/reset/counter', form)
 
+        # 08. 언어 필터: 선택한 언어만 남고 키보드 포커스가 유지되는지 확인
         def filtering(page):
             expect(page.locator('.project-card')).to_have_count(2)
             page.locator('[data-filter="HTML"]').click()
@@ -159,6 +187,7 @@ def main(live):
             expect(page.locator('.project-card')).to_have_count(2)
         scenario('language filter and focus', filtering)
 
+        # 09. API 화면: 응답을 기다리는 로딩과 빈 결과 확인
         pending = []
         def loading(page):
             expect(page.locator('#project-list')).to_have_attribute('aria-busy', 'true')
@@ -169,6 +198,7 @@ def main(live):
             expect(page.locator('#project-list')).to_have_attribute('aria-busy', 'false')
         scenario('loading to success', loading, lambda r: pending.append(r))
         scenario('empty success', lambda page: expect(page.locator('#project-list')).to_contain_text('표시할 프로젝트가 없습니다'), lambda r: r.fulfill(json=[]))
+        # 10. API 실패: 모의 HTTP 오류·재시도·네트워크 오류·잘못된 데이터 확인
         for status in [403, 429, 404, 500]:
             calls = []
             def handler(route, *, status=status):
@@ -186,18 +216,21 @@ def main(live):
         for body in [{}, [None], ['bad'], [dict(REPOS[0], language={})]]:
             scenario('invalid response ' + str(body)[:40], lambda page: expect(page.locator('#project-list')).to_contain_text('올바르지 않은 응답'), lambda r, *, body=body: r.fulfill(json=body))
 
+        # 11. 캐시: 손상·만료·정상 데이터와 저장 공간 차단 확인
         for cache in ['{', json.dumps(dict(time=0, repos=REPOS))]:
             scenario('broken or expired cache', lambda page: expect(page.locator('.project-card')).to_have_count(2), init='localStorage.setItem(%s, %s)' % (json.dumps(KEY), json.dumps(cache)))
         scenario('cache with null item recovers via network', lambda page: expect(page.locator('.project-card')).to_have_count(2), init="localStorage.setItem('%s', JSON.stringify({time: Date.now(), repos:[null]}))" % KEY)
         requests = []
         scenario('valid cache skips network', lambda page: (expect(page.locator('.project-card')).to_have_count(2), check('zero network calls with valid cache', lambda: assert_zero(requests))), lambda r: (requests.append(1), r.abort()), init="localStorage.setItem('%s', JSON.stringify({time: Date.now(), repos: %s}))" % (KEY, json.dumps(REPOS)))
         scenario('blocked storage preserves page and API', lambda page: (expect(page.locator('.project-card')).to_have_count(2), page.locator('#theme-toggle').click(), expect(page.locator('html')).to_have_attribute('data-theme', 'dark')), init="Storage.prototype.getItem = Storage.prototype.setItem = () => { throw new Error('blocked'); }")
+        # 12. 여러 페이지 조회: 저장소 100개 + 다음 페이지 1개 확인
         pages = []
         def pagination(route):
             pages.append(route.request.url)
             route.fulfill(json=[dict(REPOS[0], name='repo-%s' % i) for i in range(100)] if len(pages) == 1 else [REPOS[1]])
         scenario('pagination 100 + 1', lambda page: expect(page.locator('.project-card')).to_have_count(101), pagination)
         assert len(pages) == 2 and 'page=2' in pages[1]
+        # 13. 외부 데이터: 문자열이 코드로 실행되지 않고 링크가 검사되는지 확인
         unsafe = dict(REPOS[0], name='<img src=x onerror="window.injected=1">', description='<script>bad()</script>', html_url='javascript:alert(1)')
         def escaping(page):
             expect(page.locator('.project-card')).to_have_count(1)
@@ -206,10 +239,11 @@ def main(live):
             assert page.evaluate('window.injected === undefined')
         scenario('API HTML escaping and URL validation', escaping, lambda r: r.fulfill(json=[unsafe]))
 
+        # 14. 시간 제한과 애니메이션: 응답 지연 중단·실제 Observer 등장 확인
         def timeout(page):
             page.clock.fast_forward(15001)
             expect(page.locator('#project-list')).to_contain_text('요청 시간이 초과')
-        # Hold only fetch indefinitely; the real AbortController still handles the timeout.
+        # GitHub 응답만 기다리게 만든 뒤, 가상 시간을 진행해 실제 AbortController 중단을 확인합니다.
         scenario('15-second request timeout', timeout, init="const nativeFetch = window.fetch; window.fetch = (...args) => String(args[0]).startsWith('https://api.github.com/') ? new Promise((resolve,reject) => args[1].signal.addEventListener('abort', () => reject(new DOMException('Aborted','AbortError')))) : nativeFetch(...args);")
 
         context = browser.new_context(viewport=dict(width=375, height=900), reduced_motion='no-preference')
@@ -224,6 +258,7 @@ def main(live):
         print('PASS real Intersection Observer and smooth scrolling CSS', flush=True)
         passed.append('real Intersection Observer and smooth scrolling CSS')
 
+        # 15. --live 전용: 실제 API·공개 사이트 확인 후 로컬 스크린샷 갱신
         if live:
             for url in [BASE, 'https://dooolll00.github.io/B1-1/']:
                 context = browser.new_context(viewport=dict(width=1440, height=1000), reduced_motion='reduce', color_scheme='light')
@@ -267,6 +302,7 @@ def assert_zero(items):
     assert not items, items
 
 
+# 16. 터미널에서 이 파일을 직접 실행했을 때 시작하는 부분
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--live', action='store_true', help='Also check real GitHub API and Pages; refresh screenshots.')
