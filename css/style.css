@@ -952,7 +952,6 @@ h1 > span,
     grid-template-columns: repeat(4, 1fr);
   }
   .about-grid {
-    grid-template-columns: 0.7fr 1.3fr;
     gap: 100px;
   }
   .contact-grid {

@@ -354,3 +354,58 @@
 - 반영 방법: 터미널 git push --dry-run에서 쓰기 인증 부재 확인. 인증된 GitHub 앱으로 커밋을 만들고 force 없이 main에 반영한다. 결과와 실제 커밋은 후속 기록으로 남긴다.
 - 커밋 메시지: refactor: simplify code and improve beginner documentation
 - 현재 단계: 업로드 시작 전 기록. 원격 반영·로컬 동기화 결과 확인이 남아 있다.
+
+## 2026-09-16 14:04 KST — 미션 기준 추가 단순화 가능성 검토
+
+- 요청: B1-1을 미션에 맞게 더 간단하게 만들 수 있는 부분만 검토하고 구현에는 반영하지 않는다.
+- 변경 파일: 저장소 기록 규칙에 따라 WORK_LOG.md에 이번 검토만 추가. 사이트 코드·기타 문서는 수정하지 않았다.
+- 핵심 검토: 9월 10일 미션 원문 요약과 현재 HTML/CSS/JS를 대조했다. 기능 유지 후보는 폼 submitted/touched 상태 통합(제출 시 모든 필드를 touched로 설정), renderForm의 고정 DOM 조회 사전 선택, 1024px about-grid의 중복 열 정의 제거다. 기능 축소 후보는 API 캐시, 여러 페이지 조회, 시스템 테마 감지다. 캐시 제거 시 요청 증가, 단일 조회 시 100개 초과 저장소 누락, 시스템 감지 제거 시 자동 테마 동기화 상실을 설명해야 한다.
+- 판단: 기존 함수 분리는 이미 읽기 쉽게 정리되어 있어 합치는 것을 권하지 않는다. 필수 API 네 가지 화면·재시도·403 오류 처리, 테마 저장·복원, input/submit 폼 검증과 최소 세 상태→화면 흐름은 보존해야 한다. 선택 언어 필터는 map/filter 학습 설명에 유용하여 유지 권장. 외부 데이터 이스케이프·URL 검사·접근성 처리는 단순히 줄 수를 줄이기 위해 제거하지 않는다.
+- 실행 명령/결과: cat/sed/nl/rg로 기록·소스·가이드 확인, git status --short에서 시작 시 변경 없음, git diff --check 통과. 구현 변경 없는 정적 검토로 브라우저 테스트는 실행하지 않았다.
+- 미해결/다음 작업: 제안은 미반영 상태이며 실제 수정 요청 시 선택 범위에 맞춰 구현·관련 테스트·문서를 함께 검증한다.
+- Git commit/push: 수행하지 않음.
+
+## 2026-09-16 14:10 KST — 화면과 기존 동작을 보존한 중복 정리 반영
+
+- 요청: 최종 페이지의 디자인·문구·배치·동작을 유지하면서 앞선 단순화 제안을 실제 코드에 반영한다.
+- 변경 파일: js/main.js, css/style.css, MISSION_GUIDE.md, PRESENTATION_GUIDE.md, WORK_LOG.md. 기존 검토 기록은 보존했다.
+- 핵심 작업: 폼 submitted를 제거하고 제출 시 모든 필드의 touched를 true로 설정하여 기존 검사 시점을 유지했다. 오류 메시지·글자 수·성공 안내 DOM을 처음에 선택해 재사용한다. 1024px about-grid의 열 비율 중복 선언을 제거하고 768px 선언을 그대로 적용한다. 두 설명 문서의 폼 상태 설명을 맞췄다.
+- 보존: HTML·이미지·화면 문구 변경 없음. 캐시·페이지네이션·15초 제한·시스템 테마·언어 필터·접근성·오류 처리 유지. 배포 설정 변경 없음.
+- 검증 환경: 수정 전 JS/CSS를 /tmp/b1-preserve.x9D51l에 보관하고 임시 가상환경에 Playwright 1.60.0 및 비교 확인용 Pillow 설치. localhost:5511 서버와 Chrome 146.0.7680.165 사용. 프로젝트 의존성 및 기존 tests/review.py 변경 없음.
+- 기능 검사: `/tmp/b1-preserve.x9D51l/venv/bin/python tests/review.py`에서 27개 모두 통과. 반응형·메뉴·테마·폼·필터·API 네 가지 화면·HTTP/네트워크 오류·재시도·캐시·페이지네이션·보안 처리·타임아웃·Observer 포함. 실제 GitHub 요청 대신 모의 데이터 사용.
+- 수정 전후 비교: 임시 compare.py로 320/375/767/768/1024/1440px × 라이트/다크 12개 초기 화면 및 375px 폼의 입력/blur/오류 제출/수정/성공/성공 후 수정/재제출을 확인. 총 30개 상태에서 DOM·입력값·포커스·About 열 너비 동일, 총 18개 전체 화면 PNG 바이트 일치. 비교 시 동일 날짜·모의 데이터·시스템 폰트(CDN 차단)·동작 줄이기 설정을 사용했다.
+- 비교 과정: 초기 캡처에서 스크롤 처리 시점과 GPU 렌더링에 따른 차이가 발생했다. 캡처 스크롤 위치·대기 조건을 맞추고 두 버전 모두 GPU 및 threaded scrolling을 비활성화한 동일 조건에서 전체 비교를 다시 실행하여 통과했다. 해당 조정은 임시 검사 스크립트에만 적용했다.
+- 기타 검증: git diff --check 통과. 제출용 스크린샷은 변경하지 않았다. 임시 검사 서버 종료.
+- 미해결/다음 작업: 로컬 반영과 검증 완료. 모든 기기·입력 조합까지 검증한 것은 아니며, 실제 API/공개 Pages 재검증 및 업로드·배포는 수행하지 않았다. 추후 배포 요청 시 이번 변경을 포함해 확인한다.
+- Git commit/push: 수행하지 않음.
+
+## 2026-09-16 14:14 KST — 새로 제공된 미션 전문 기준 최종 검토
+
+- 요청: 첨부한 미션 전문을 기준으로 최종 검토한다. 기존 화면·동작 유지 조건을 보존하고 이번에는 검토만 수행한다.
+- 원문 출처: /Users/dooolll5969/.codex/attachments/3ec9eada-046e-44eb-a4f3-5139a913c010/pasted-text.txt 전체를 읽었다. 소개·결과물·학습 목표·기능 요구·보너스·개발 환경·제약·예시를 현재 파일과 대조했다. 앞서 기록한 미션 요약에서 새 필수 요구 누락은 발견하지 못했다.
+- 변경 파일: WORK_LOG.md에 이번 결과만 추가. 기존 미커밋 JS/CSS/설명 문서와 이전 기록 보존. 소스·README·제출용 이미지 수정 없음.
+- HTML/구성: index.html/css/js/images 역할 분리, 외부 파일 연결·defer, 시맨틱 태그, Hero 인사말·CTA/자기소개·프로필/기술 목록/API 카드/문의 폼/저작권·GitHub 링크, 모든 구역 앵커·alt·label 확인.
+- CSS: 색상·폰트·간격 변수, 다크 테마 변수, nav Flex 및 Projects auto-fit/minmax Grid, 모바일 퍼스트와 768/1024px 분기, 모바일 메뉴, 버튼·카드 hover/transition/그림자 확인.
+- JS: const/let·화살표 함수·템플릿 리터럴·객체 구조분해·map/filter/forEach, DOM 선택·내용·classList 조작, click/submit/scroll/input·preventDefault 확인. var·HTML 이벤트 속성·인라인 스타일 없음. 외부 실행 라이브러리 없음. Pretendard는 허용 범주인 웹 폰트이며 Python/Playwright는 사이트에 로드되지 않는 검사 도구다.
+- 기능/상태: 메뉴·부드러운 이동·60px 헤더·300px 맨 위 버튼·테마 저장 복원·Observer 0.2, 문의 폼 필수값/이메일/근처 오류/성공 안내, fetch/async/await/try-catch·API 로딩/성공/오류/빈 결과/403·재시도 확인. 테마·메뉴·API·폼·필터의 다섯 상태→렌더링 흐름을 확인했다.
+- 보너스: 언어 필터·시스템 테마 구현. 타이핑·실제 메일 전송은 미구현이나 선택 사항이므로 필수 누락이 아니다.
+- 제출 자료: README에 설명·기술·저장소/Pages URL·세 스크린샷 및 60/300/0.2 설정 명시 확인. 기존 스크린샷 PNG 검증 및 육안 확인(1440x3943, 375x7077, 1440x3943). README 로컬 링크 정상.
+- 동작 검증: tests/review.py를 /tmp/b1-final-review/tests/review.py에 그대로 복사하고 `/tmp/b1-preserve.x9D51l/venv/bin/python /tmp/b1-final-review/tests/review.py --live` 실행, Chrome 146.0.7680.165에서 29개 모두 통과. --live의 캡처는 /tmp/b1-final-review/images/screenshots에만 저장했다. 모의 API 27개 검사와 실제 로컬/공개 사이트 API·테마·폼·메뉴·스크롤·반응형 점검 통과. 실제 저장소 양쪽 각 8개, 검사 중 JS 오류 없음.
+- 공개본 확인: 웹 열기 도구 실패 후 Python urllib와 실제 Chrome으로 HTTP 200 확인. 공개 index.html은 로컬과 동일, CSS/JS는 이번 9월 16일 단순화 전 보관본과 동일하다. git ls-remote로 원격 main ea6526e562a1ee7e9b9e22bb29582496edc39452 확인. 현재 로컬 최신 변경은 아직 미배포.
+- 발견 1(개발 환경): `code --list-extensions` 결과 현재 VS Code 환경에 ritwickdey.LiveServer 없음. .vscode 추천·5500 포트 설정은 있으나 설치 확인이 필요하다. 미션은 VS Code + Live Server를 명시한다. 검토 요청이므로 설치하지 않았다.
+- 발견 2(배포): 공개본 주요 기능은 정상이나 최신 로컬 정리와 불일치. 최신 제출본으로 맞추려면 커밋·업로드·배포 확인이 남는다.
+- 발견 3(문서): README.md:10의 9월 10일 변경이 로컬 전용이라는 설명은 이미 반영된 공개 코드와 다르며, 현재 미배포 변경은 9월 16일 작업이다. README.md:44의 현 환경 Live Server 설치 확인 설명도 현 목록과 맞지 않는다. 검토만 요청되어 수정하지 않았다.
+- 한계: 설치된 Chrome 146에서 통과했으나 현재 최신 Chrome 버전인지 확인하거나 새 버전으로 검사하지 않았다. 학습 목표의 '스스로 설명할 수 있음'은 코드/자동 검사로 판정할 수 없어 별도 발표 연습이 필요하다. 모든 기기·입력에 대한 무오류 보장은 아니다.
+- 명령/검증: cat/sed/rg 및 Git 읽기 명령, code --list-extensions, urllib 공개 파일 비교, 임시 복사본 --live 실행, PNG/README 링크/Python AST/필수 구문·금지 속성 정적 검사, git diff --check 통과. 정적 검사 스니펫의 괄호 오타를 고쳐 재실행 후 통과했다. 검사 서버 종료.
+- 미해결/다음 작업: 위 개발 환경·배포·README 항목을 제출 전 맞추고, 최신 Chrome 및 본인의 여섯 학습 목표 설명을 최종 확인한다. 사이트 필수 구현의 기능 결함은 이번 검토 범위에서 발견하지 못했다.
+- Git commit/push: 수행하지 않음.
+
+## 2026-09-16 — 제출 준비 정리 및 현재 코드 기준 README 재작성
+
+- 요청: 최종 검토에서 남은 개발 환경·배포·문서 사항을 정리하고 README를 현재 코드 기준으로 새로 작성한다.
+- 변경 파일: README.md 전면 재작성, MISSION_GUIDE.md/PRESENTATION_GUIDE.md의 오래된 배포 안내 및 업로드 예시 수정, WORK_LOG.md 추가. 앞서 검증한 js/main.js/css/style.css 정리도 이번 업로드에 포함한다.
+- 핵심 작업: Live Server 5.7.10 설치 후 code --list-extensions --show-versions로 확인. README를 소개·기능·기술·실행·설정·API·검사·스크린샷·배포 중심으로 다시 작성했다. 과거 요청대로 미션 체크리스트·학습 가이드 링크는 추가하지 않았다. 9월 7일 기존 스크린샷은 촬영일을 정확히 명시하고 보존했다.
+- 검증: 직전 최종 코드의 Chrome 29개 검사 통과 후 사이트 실행 코드 변경 없음. README의 설정값·명령·링크를 현재 파일과 대조하고 git diff --check 확인. 라이브러리나 사이트 디자인 변경 없음.
+- 배포 준비: git fetch origin 후 HEAD와 origin/main 차이 0/0. Git 터미널 dry-run은 쓰기 인증 부재로 실패하여 연결된 GitHub 앱으로 파일 트리·커밋 생성 후 force 없이 main을 갱신한다.
+- 커밋 메시지: `docs: rewrite README and publish verified portfolio cleanup`.
+- 미해결/다음 작업: 업로드·Pages 완료와 공개 파일 일치 및 주요 기능을 확인하고 결과를 추가 기록한다. 현재 단계는 배포 전이며 성공을 선기록하지 않는다.

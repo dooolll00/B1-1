@@ -1,6 +1,6 @@
 # 반응형 포트폴리오 미션 수행 가이드
 
-이 가이드는 현재 저장소의 코드를 이해하고, 같은 기능을 단계별로 직접 구현하는 방법을 설명합니다. 로컬 디자인은 사용자 요청에 따라 블루·퍼플 테마와 Pretendard 웹 폰트를 적용했습니다. 웹 폰트는 미션에서 허용하며, UI 프레임워크는 사용하지 않습니다. 최신 배포 반영 여부는 README에서 확인합니다.
+이 가이드는 현재 저장소의 코드를 이해하고, 같은 기능을 단계별로 직접 구현하는 방법을 설명합니다. 로컬 디자인은 사용자 요청에 따라 블루·퍼플 테마와 Pretendard 웹 폰트를 적용했습니다. 웹 폰트는 미션에서 허용하며, UI 프레임워크는 사용하지 않습니다. 최신 배포 결과는 WORK_LOG.md에서 확인합니다.
 
 - 배포 사이트: https://dooolll00.github.io/B1-1/
 - 저장소: https://github.com/dooolll00/B1-1
@@ -199,7 +199,7 @@ submit → preventDefault()
 → 성공 안내 또는 첫 오류 필드로 포커스 이동
 ```
 
-`trim()`으로 공백만 있는 입력을 거부하고 정규식과 이메일 입력 요소의 검사 결과를 사용합니다. `touched`는 사용자가 한 번 떠난 필드를 기억하므로, 처음 접속하자마자 오류가 표시되지 않습니다.
+`trim()`으로 공백만 있는 입력을 거부하고 정규식과 이메일 입력 요소의 검사 결과를 사용합니다. `touched`는 필드를 떠났거나 제출을 시도하여 검사 대상이 된 입력칸을 기억하므로, 처음 접속하자마자 오류가 표시되지 않습니다.
 
 **완료 기준:** 빈 제출·공백 입력·잘못된 이메일은 오류를 표시하고 정상 입력은 성공 안내를 표시합니다. 성공 뒤 수정하면 이전 성공 안내가 사라집니다. 이 폼은 입력값 검증 데모로, 실제 이메일을 전송하지 않습니다.
 
@@ -246,7 +246,7 @@ git status
 
 ```bash
 git diff
-git add index.html css/style.css js/main.js images README.md MISSION_GUIDE.md PRESENTATION_GUIDE.md tests/review.py WORK_LOG.md
+git add index.html css/style.css js/main.js images README.md FILE_GUIDE.md MISSION_GUIDE.md PRESENTATION_GUIDE.md tests/review.py WORK_LOG.md
 git commit -m "Improve portfolio learning guide"
 git push origin main
 ```

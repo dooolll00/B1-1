@@ -49,7 +49,6 @@ const state = {
     values: { name: "", email: "", message: "" },
     errors: {},
     touched: {},
-    submitted: false,
     success: false,
   },
 };
@@ -63,6 +62,9 @@ const filters = document.querySelector("#project-filters");
 const summary = document.querySelector("#project-summary");
 const form = document.querySelector("#contact-form");
 const fields = [...form.querySelectorAll("input, textarea")];
+const fieldErrors = fields.map((field) => document.querySelector(`#${field.id}-error`));
+const messageCount = document.querySelector("#message-count");
+const formStatus = document.querySelector("#form-status");
 
 // 02. [필수] 다크 모드: 클릭 → state.theme → renderTheme → CSS 변수 변경
 const renderTheme = () => {
@@ -447,23 +449,23 @@ const validateField = (name) => {
   return "";
 };
 const renderForm = () => {
-  fields.forEach((field) => {
+  fields.forEach((field, index) => {
     const error = state.form.errors[field.name] || "";
-    document.querySelector(`#${field.id}-error`).textContent = error;
+    fieldErrors[index].textContent = error;
     field.setAttribute("aria-invalid", String(Boolean(error)));
   });
-  document.querySelector("#message-count").textContent =
+  messageCount.textContent =
     `${state.form.values.message.length} / 2000`;
-  document.querySelector("#form-status").textContent = state.form.success
+  formStatus.textContent = state.form.success
     ? "입력값 검증에 성공했습니다! 학습용 폼이므로 메시지는 실제 전송되지 않았습니다."
     : "";
 };
-// [추가 UX] 입력을 시작하기도 전에 오류를 보이지 않도록 touched를 기억합니다.
+// [추가 UX] 필드를 떠났거나 제출한 뒤부터 입력 중에도 오류를 검사합니다.
 fields.forEach((field) => {
   field.addEventListener("input", () => {
     state.form.values[field.name] = field.value;
     state.form.success = false;
-    if (state.form.touched[field.name] || state.form.submitted) {
+    if (state.form.touched[field.name]) {
       state.form.errors[field.name] = validateField(field.name);
     }
     renderForm();
@@ -478,8 +480,8 @@ fields.forEach((field) => {
 // 제출 → 기본 새로고침 방지 → 모든 필드 검증 → 성공 안내 또는 첫 오류 포커스
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  state.form.submitted = true;
   fields.forEach((field) => {
+    state.form.touched[field.name] = true;
     state.form.values[field.name] = field.value;
     state.form.errors[field.name] = validateField(field.name);
   });
