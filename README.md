@@ -119,3 +119,118 @@ GitHub Pages를 사용하며 별도의 빌드 명령은 없습니다.
 4. 공개 사이트에서 메뉴·테마 저장·폼·GitHub 프로젝트 조회가 정상 동작하는지 확인합니다.
 
 CSS·JavaScript·이미지는 상대 경로로 연결되어 `/B1-1/` 하위 주소에서도 사용할 수 있습니다.
+
+## 미션 요구사항 체크리스트
+
+2026-09-16 미션 전문과 현재 코드, Chrome 검사 및 배포 확인 결과를 기준으로 작성했습니다. `[x]`는 구현·확인 완료, `[ ]`는 추가 확인 필요 또는 선택 과제 미구현을 뜻합니다. 발표 준비 여부를 표시하는 표가 아닙니다.
+
+### 기본 구성·개발 환경
+
+- [x] `index.html`, `css/`, `js/`, `images/`로 역할 분리
+- [x] 외부 CSS 연결 및 JavaScript의 `defer` 적용
+- [x] VS Code와 Live Server 설치·설정 확인 — `127.0.0.1:5500`
+- [x] 순수 HTML/CSS/JavaScript 사용 — React, Vue, jQuery, Bootstrap, Tailwind 등 사용하지 않음
+- [x] 허용된 웹 폰트 사용 — Pretendard, 검사 도구는 사이트에 로드하지 않음
+
+### HTML 구조
+
+- [x] `header`, `nav`, `main`, `section`, `article`, `footer` 사용
+- [x] Hero: 인사말과 CTA 버튼
+- [x] About: 자기소개와 프로필 이미지
+- [x] Skills: 기술 스택 목록
+- [x] Projects: GitHub API 프로젝트 카드
+- [x] Contact: 문의 폼
+- [x] Footer: 저작권과 소셜 링크
+- [x] 네비게이션에 각 구역으로 이동하는 앵커 링크 제공
+- [x] 이미지에 의미 있는 `alt` 지정
+- [x] 폼의 `label for`와 입력 요소 `id` 연결
+
+구현 위치: [index.html](index.html), 동적 프로젝트 카드는 [js/main.js](js/main.js)의 `createProjectCard`.
+
+### CSS·반응형
+
+- [x] 외부 `css/style.css` 사용
+- [x] `:root`에 색상·폰트·간격 변수 정의
+- [x] `[data-theme="dark"]`에 다크 모드 변수 정의
+- [x] 네비게이션에 Flexbox 적용 — 로고 왼쪽, 메뉴 오른쪽
+- [x] 프로젝트 카드에 Grid의 `auto-fit`과 `minmax` 적용
+- [x] 모바일 퍼스트와 768px·1024px 브레이크포인트 적용
+- [x] 모바일에서 기본 메뉴 숨김·햄버거 버튼 표시
+- [x] 버튼·카드에 `hover`와 `transition`, 카드에 `box-shadow` 적용
+- [x] 320/375/767/768/1024/1440px에서 반응형 및 가로 넘침 검사 통과
+
+구현 위치: [css/style.css](css/style.css)의 `.nav`, `.projects-grid`, 미디어 쿼리.
+
+### JavaScript·DOM·이벤트
+
+- [x] `var` 대신 `const`·`let` 사용
+- [x] HTML의 `onclick` 대신 `addEventListener` 사용
+- [x] 인라인 `style` 속성 사용하지 않음
+- [x] `querySelector`·`querySelectorAll`로 요소 선택
+- [x] `textContent`·`innerHTML`로 화면 내용 갱신
+- [x] `classList.add`·`remove`·`toggle` 사용
+- [x] `click`·`submit`·`scroll`·`input` 이벤트 처리
+- [x] `event.preventDefault()`로 앵커·폼 기본 동작 제어
+- [x] 화살표 함수·템플릿 리터럴·구조분해 할당 사용
+- [x] `map`으로 저장소를 카드 HTML로 변환하고 `forEach`로 순회
+
+### 인터랙션
+
+- [x] 햄버거 버튼 재클릭으로 메뉴 열기·닫기 — `active` 클래스 토글
+- [x] 네비게이션 클릭 시 해당 구역으로 부드럽게 이동
+- [x] 스크롤 300px 이상에서 맨 위 버튼 표시, 클릭 시 최상단 이동
+- [x] 스크롤 60px 이상에서 헤더 배경 변경
+- [x] 다크 모드 전환·localStorage 저장·새로고침 후 복원
+- [x] Intersection Observer 등장 효과 — `threshold: 0.2`
+- [x] 스크롤 기준값과 Observer 설정을 README에 명시
+
+구현 위치: `renderMenu`, `renderScroll`, `renderTheme`, `IntersectionObserver`. 동작 줄이기 설정에서는 부드러운 이동과 애니메이션을 생략합니다.
+
+### 문의 폼
+
+- [x] 이름·이메일·메시지 필드 제공
+- [x] 필수값과 공백만 있는 입력 검사
+- [x] 이메일 형식 검사
+- [x] 오류 메시지를 해당 입력칸 근처에 표시
+- [x] 제출 시 `preventDefault()` 적용
+- [x] 검증 성공 메시지 표시
+
+구현 위치: `validateField`, `renderForm`, `contact-form`의 제출 이벤트. 실제 이메일 전송은 선택 과제입니다.
+
+### GitHub API·상태 관리
+
+- [x] 본인 계정의 `/users/dooolll00/repos` 호출
+- [x] `fetch`·`async/await`·`try/catch` 사용
+- [x] 로딩 상태: 스피너와 안내 표시
+- [x] 성공 상태: 저장소 카드 목록 표시
+- [x] 오류 상태: 불러올 수 없다는 안내와 재시도 버튼 표시
+- [x] 빈 결과: 표시할 프로젝트가 없다는 안내 표시
+- [x] HTTP 403 응답을 오류 UI로 처리
+- [x] 최소 3개의 상태 → 화면 갱신 흐름 구현 — 테마·API·폼, 추가로 메뉴·필터
+- [x] 반복 API 호출을 줄이도록 5분 캐시 적용 — 미션 원문의 비인증 시간당 60회 제한 안내 고려
+
+구현 위치: `fetchAllRepos`, `checkRepoResponse`, `loadProjects`, `renderProjects`, `state`. 실제 요청을 반복하기보다 모의 응답으로 오류를 검사합니다.
+
+### 배포·제출 자료·브라우저
+
+- [x] GitHub Pages 공개 URL 제공 및 최신 코드 배포 확인
+- [x] 배포본 반응형·메뉴·테마·스크롤·API·폼 동작 확인
+- [x] 공개 HTML·CSS·JS와 로컬 파일 일치 확인
+- [x] README에 프로젝트 설명·사용 기술·배포 URL·스크린샷 포함
+- [x] GitHub 저장소 URL·Pages URL 준비 — 문서 상단 링크
+- [x] 데스크톱·모바일·다크 모드 스크린샷 준비 — `images/screenshots/`
+- [x] 설치된 Chrome 146.0.7680.165에서 검사 통과
+- [ ] 제출 시점의 최신 Chrome 버전 여부와 해당 버전 동작 확인
+
+제출 자료를 준비한 상태이며 제출처에 실제 제출했는지는 별개입니다. 스크린샷은 같은 디자인의 2026-09-07 촬영본이며 API 목록은 현재와 다를 수 있습니다.
+
+### 선택 과제
+
+- [x] 언어별 프로젝트 필터 — `array.filter()`와 필터 버튼
+- [x] 시스템 다크 모드 감지 — `prefers-color-scheme`
+- [ ] Hero 타이핑 효과 — 미구현, 선택 사항
+- [ ] Formspree/EmailJS 실제 이메일 전송 — 미구현, 선택 사항
+
+### 학습 목표 확인 범위
+
+시맨틱 구조 설계, Flexbox/Grid 선택, DOM 선택·이벤트 연결, ES6+와 map/filter, 비동기 API 상태, 이벤트 → 상태 → 화면 갱신을 설명할 구현은 갖추었습니다. **본인이 이 여섯 가지를 스스로 설명할 수 있는지는 자동 검사로 판정하지 않았습니다.** 발표자료의 별도 체크리스트에서 직접 확인합니다.
