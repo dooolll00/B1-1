@@ -409,3 +409,15 @@
 - 배포 준비: git fetch origin 후 HEAD와 origin/main 차이 0/0. Git 터미널 dry-run은 쓰기 인증 부재로 실패하여 연결된 GitHub 앱으로 파일 트리·커밋 생성 후 force 없이 main을 갱신한다.
 - 커밋 메시지: `docs: rewrite README and publish verified portfolio cleanup`.
 - 미해결/다음 작업: 업로드·Pages 완료와 공개 파일 일치 및 주요 기능을 확인하고 결과를 추가 기록한다. 현재 단계는 배포 전이며 성공을 선기록하지 않는다.
+
+## 2026-09-16 14:19 KST — README 재작성·최신 코드 업로드·배포 완료
+
+- 요청: 최종 검토의 정리 사항 해결 및 현재 코드 기준 README 재작성.
+- 결과: Live Server 5.7.10 설치 확인. README 재작성과 설명 문서 정리, 앞선 CSS/JS 중복 제거를 원격 main에 반영했다. 사이트 디자인·콘텐츠·기능 변경 없이 정리했다.
+- 업로드 커밋: `612a8fd20907785d1340027dd0d7fe374fa5759d`, 메시지 `docs: rewrite README and publish verified portfolio cleanup`. 터미널 push 대신 연결된 GitHub 앱으로 force 없이 main 업로드 완료.
+- 로컬 동기화: fetch 후 작업 파일과 origin/main 차이가 없고 스테이징 트리 ed5d672d228fa4b044dce56a46362a7adbc92ba6가 원격 트리와 동일함을 확인한 뒤 soft reset으로 로컬 main을 원격 커밋에 맞췄다. 작업 파일 삭제나 강제 push 없음.
+- Pages: `pages build and deployment` 실행 35058991744 completed/success. https://github.com/dooolll00/B1-1/actions/runs/35058991744
+- 공개 검증: /tmp/b1-final-review/deploy_check.py 실행, 공개 index.html/css/style.css/js/main.js/README.md HTTP 200 및 로컬과 바이트 일치. 실제 GitHub 저장소 8개, 테마 저장·새로고침 복원, 폼 오류·성공·성공 후 수정, 모바일 메뉴·Footer 포커스·맨 위 이동, 320/375/767/768/1024/1440px 가로 넘침 없음, 이미지 로딩 통과. 검사 중 JS 오류 없음.
+- 후속 문서: README의 검사 결과 문단에 최신 배포 후 확인 사실을 추가하고 이 기록과 함께 `docs: record verified portfolio deployment` 메시지로 업로드한다. 기능 코드는 재변경하지 않는다.
+- 검증 명령: code 설치/목록 확인, git fetch/rev-list/diff/write-tree, README 링크·코드 블록 검사, git diff --check, GitHub API Actions 조회, urllib 파일 비교 및 Chrome 배포 검사. 전체 29개 검사는 직전 최종 검토 통과 결과를 유지하고 신규 배포 대상만 다시 검사했다.
+- 미해결/다음 작업: 요청한 개발 환경·문서·최신 배포 정리 완료. 본인의 코드 설명 연습은 별도로 필요하며, Chrome 최신 버전 여부는 이번 범위에서 변경·검증하지 않았다. 후속 기능 수정은 요청 시 진행한다.
