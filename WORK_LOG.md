@@ -469,3 +469,11 @@
 - 업로드 방법: 앞서 확인한 터미널 Git 인증 부재에 따라 연결된 GitHub 앱으로 커밋 생성 후 force 없이 main 갱신.
 - 커밋 메시지: `docs: add mission requirements checklist and align presentation guide`.
 - 미해결/다음 작업: 원격 업로드·Pages 반영 및 로컬 동기화 확인 후 결과 기록.
+
+## 2026-09-16 — 문서 업로드 완료
+
+- README 미션 요구사항 체크리스트와 PRESENTATION_GUIDE 발표자료 정리를 원격 main에 반영했다. 발표자료의 준비 체크리스트는 보존했다.
+- 커밋: e137fba580fcaf4f6885cdc7574d6bfb2576a18c, 메시지 `docs: add mission requirements checklist and align presentation guide`.
+- GitHub 앱을 통한 원격 업로드 성공. fetch 후 작업 파일·스테이징과 origin/main의 일치를 확인하고 soft reset으로 로컬 main을 맞췄으며 작업 폴더가 깨끗함을 확인했다. 강제 push나 파일 삭제 없음.
+- 이 완료 기록은 `docs: record checklist publication` 메시지로 추가 업로드한다. 마지막 문서 커밋의 Pages 배포 결과와 공개 문서 일치 여부도 이어서 확인한다.
+- 코드·사이트 기능 수정 없음. 남은 미션 확인 범위인 최신 Chrome 여부 및 자기 설명 능력은 앞선 기록과 동일하다.
